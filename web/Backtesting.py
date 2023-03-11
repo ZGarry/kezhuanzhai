@@ -3,9 +3,12 @@ import pandas as pd
 from Painter import Painter
 
 need_log = False
+
+
 def printL(s):
     if need_log:
         print(s)
+
 
 class Backtesting:
     def __init__(self, df, mode="双低", name="default"):
@@ -16,7 +19,7 @@ class Backtesting:
 
     def init(self):
         self.myPosition = {}  # 持仓列表
-        self.posHigh = {} # 持仓股票的最高位
+        self.posHigh = {}  # 持仓股票的最高位
         self.myCash = 1000000  # 现金
         self.myHoldNum = 10  # 持债支数
 
@@ -43,7 +46,7 @@ class Backtesting:
     # 已退市
     def dont_have_value(self, name):
         return len(self.today_df[self.today_df['secShortNameBond']
-                                  == name]) == 0
+                                 == name]) == 0
 
     # 获取某某股票的上一份价格
     def get_last_price(self, name):
@@ -102,7 +105,8 @@ class Backtesting:
 
         # 持仓最高位更新
         for pos in self.myPosition:
-            self.posHigh[pos] = max(self.posHigh.get(pos,0), self.get_last_price(pos))
+            self.posHigh[pos] = max(self.posHigh.get(
+                pos, 0), self.get_last_price(pos))
 
     # 检查当日市值
     def check2(self):
@@ -125,7 +129,7 @@ class Backtesting:
                     need_sell.append(pos)
             elif self.mode.endswith("下跌10%卖出-130卖出"):
                 if self.dont_have_value(pos) or (self.get_last_price(pos) <= self.posHigh[pos] * 0.9 and self.get_last_price(pos) >= 130):
-                                    need_sell.append(pos)
+                    need_sell.append(pos)
             else:
                 if pos in self.today_low:
                     continue
@@ -188,14 +192,12 @@ backtester3.run()
 backtester4 = Backtesting(data, mode="双低-下跌10%卖出", name="双低-下跌10%卖出")
 backtester4.run()
 
-
 backtester5 = Backtesting(data, mode="低价-下跌10%卖出", name="低价-下跌10%卖出")
 backtester5.run()
 
-
-backtester6 = Backtesting(data, mode="低价-下跌10%卖出-130卖出", name="低价-下跌10%卖出-130卖出")
+backtester6 = Backtesting(
+    data, mode="低价-下跌10%卖出-130卖出", name="低价-下跌10%卖出-130卖出")
 backtester6.run()
-
 
 li = []
 li.append(backtester)
@@ -206,7 +208,3 @@ li.append(backtester5)
 li.append(backtester6)
 p = Painter(li)
 p.paint()
-
-# 100以下买入，130以上我就卖出
-# 下跌10%，买入；上涨10%。
-# 历史数据去分析
