@@ -206,3 +206,7 @@ li.append(backtester5)
 li.append(backtester6)
 p = Painter(li)
 p.paint()
+
+# 100以下买入，130以上我就卖出
+# 下跌10%，买入；上涨10%。
+# 历史数据去分析
