@@ -1,6 +1,6 @@
-from typing import Tuple
-import pandas as pd
+
 from Painter import Painter
+from Setting import Setting
 
 need_log = False
 
@@ -11,39 +11,20 @@ def printL(s):
 
 
 class Backtesting:
-    def __init__(self, df, mode="双低", name="default"):
-        self.df = df  # 数据源
+    def __init__(self, mode="双低", name="default", setting=Setting()):
         self.mode = mode  # 支持的策略
         self.name = name  # 策略名称
-        self.init()  # 初始化其他数据
+        self.setting = setting  # 设置
 
-    def init(self):
-        self.myPosition = {}  # 持仓列表
+        self.myPosition = {}  # 当前持仓列表
         self.posHigh = {}  # 持仓股票的最高位
-        self.myCash = 1000000  # 现金
+        self.myCash = setting.initCash  # 现金
         self.myHoldNum = 10  # 持债支数
 
         self.posValueList = []  # 市值变化列表
-        self.all_dates = self.get_all_date()  # 所有待测日期
-
-        self.today_df = None  # 今日数据
         self.today_low = None  # 今日低价格数据
+        self.today_df = None
 
-        # 数据格式是定死的，外部适配器置入
-        # 数据修订
-        self.df['value'] = 100/self.df['convPrice']*self.df['closePriceEqu']
-        self.df['ratio'] = self.df['closePriceBond']/self.df['value']-1
-        self.df['doubleLow'] = self.df['closePriceBond'] + self.df['ratio']*100
-        self.df['closePriceBond'] = self.df['closePriceBond'].apply(
-            lambda x: round(x, 2))
-
-    # 获取所有时间
-    def get_all_date(self):
-        all_dates = list(set(self.df['tradeDate']))
-        all_dates.sort()
-        return all_dates
-
-    # 已退市
     def dont_have_value(self, name):
         return len(self.today_df[self.today_df['secShortNameBond']
                                  == name]) == 0
@@ -74,12 +55,16 @@ class Backtesting:
                     map(lambda x: float(x), f.read().split(",")))
             return
 
-        for today_date in self.all_dates:
+        for today_date in self.setting.dateRange:
             printL(f'-----今日{today_date}')
-            self.check1(today_date)
+            self.today_df = self.setting.day2df[today_date]
+            self.preCheck()
+
             self.sell_all()
+            
             self.buy_all()
-            self.check2()
+            
+            self.afterCheck()
 
         # save
         if not os.path.exists(cache_file):
@@ -88,25 +73,23 @@ class Backtesting:
                 f.write(",".join(li))
 
     # 检查当日数据
-    def check1(self, today_date):
-        #   每日市场价
-        self.today_df = self.df[self.df['tradeDate'] == today_date]
+    def preCheck(self):
         #   每日低价
         if self.mode.startswith("双低"):
             today_df_low = self.today_df.sort_values('doubleLow')[
                 :self.myHoldNum]
-        if self.mode.startswith("低价"):
+        elif self.mode.startswith("低价"):
             today_df_low = self.today_df.sort_values('closePriceBond')[
                 :self.myHoldNum]
-        if self.mode == "100-130策略":
+        elif self.mode == "100-130策略":
             today_df_low = self.today_df[self.today_df['closePriceBond'] <= 100]
 
-        self.today_low = set(today_df_low['secShortNameBond'])
+        # self.today_low = set(today_df_low['secShortNameBond'])
 
         # 持仓最高位更新
-        for pos in self.myPosition:
-            self.posHigh[pos] = max(self.posHigh.get(
-                pos, 0), self.get_last_price(pos))
+        # for pos in self.myPosition:
+        #     self.posHigh[pos] = max(self.posHigh.get(
+        #         pos, 0), self.get_last_price(pos))
 
     # 检查当日市值
     def check2(self):
@@ -120,6 +103,9 @@ class Backtesting:
         # 卖出
         need_sell = []
         for pos in self.myPosition.keys():
+            # 如果退市了
+            
+
             if self.mode == "100-130策略":
                 # 退市时需要以退市价格卖出
                 if self.dont_have_value(pos) or self.get_last_price(pos) >= 130:
@@ -177,34 +163,33 @@ class Backtesting:
 
 
 # 获取所有回测数据
-file = './data/2017-2022-08-25日线数据.csv'
-data = pd.read_csv(file, index_col=0)
 
-backtester = Backtesting(data, mode="双低", name="双低")
+
+backtester = Backtesting(mode="双低", name="双低", setting=Setting())
 backtester.run()
 
-backtester2 = Backtesting(data, mode="低价", name="低价")
-backtester2.run()
+# backtester2 = Backtesting(dataFrame, mode="低价", name="低价")
+# backtester2.run()
 
-backtester3 = Backtesting(data, mode="100-130策略", name="100-130策略")
-backtester3.run()
+# backtester3 = Backtesting(dataFrame, mode="100-130策略", name="100-130策略")
+# backtester3.run()
 
-backtester4 = Backtesting(data, mode="双低-下跌10%卖出", name="双低-下跌10%卖出")
-backtester4.run()
+# backtester4 = Backtesting(dataFrame, mode="双低-下跌10%卖出", name="双低-下跌10%卖出")
+# backtester4.run()
 
-backtester5 = Backtesting(data, mode="低价-下跌10%卖出", name="低价-下跌10%卖出")
-backtester5.run()
+# backtester5 = Backtesting(dataFrame, mode="低价-下跌10%卖出", name="低价-下跌10%卖出")
+# backtester5.run()
 
-backtester6 = Backtesting(
-    data, mode="低价-下跌10%卖出-130卖出", name="低价-下跌10%卖出-130卖出")
-backtester6.run()
+# backtester6 = Backtesting(
+#     dataFrame, mode="低价-下跌10%卖出-130卖出", name="低价-下跌10%卖出-130卖出")
+# backtester6.run()
 
-li = []
-li.append(backtester)
-li.append(backtester2)
-li.append(backtester3)
-li.append(backtester4)
-li.append(backtester5)
-li.append(backtester6)
-p = Painter(li)
-p.paint()
+# li = []
+# li.append(backtester)
+# li.append(backtester2)
+# li.append(backtester3)
+# li.append(backtester4)
+# li.append(backtester5)
+# li.append(backtester6)
+# p = Painter(li)
+# p.paint()

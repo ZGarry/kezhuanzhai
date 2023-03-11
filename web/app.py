@@ -11,6 +11,12 @@ def hello_world():
     return "<p>Hello, World!</p>"
 
 
+@app.route("/currentMode")
+def currentMode():
+    # 当前模式
+    return render_template("result.html")
+
+
 # 放到templates文件夹可使用
 @app.route("/run")
 def run():
