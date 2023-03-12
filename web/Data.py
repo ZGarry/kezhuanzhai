@@ -1,7 +1,7 @@
 import pandas as pd
 
 # 数据位置
-filePath = 'data/2017-2022-08-25日线数据.csv'
+filePath = '2017-2022-08-25日线数据.csv'
 # 数据
 df = pd.read_csv(filePath, index_col=0)
 # 日期数据范围
@@ -25,5 +25,3 @@ dateRange.sort()
 # 计算日数据
 for date_str in dateRange:
     day2df[date_str] = df[df['tradeDate'] == date_str]
-
-

@@ -55,4 +55,4 @@ class Painter:
                 label_opts=opts.LabelOpts(is_show=False),
                 linestyle_opts=opts.LineStyleOpts(width=1),
             ))
-        C = (C.render("build/result.html"))
+        C = (C.render("templates/result.html"))

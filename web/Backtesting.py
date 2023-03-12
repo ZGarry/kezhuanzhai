@@ -164,8 +164,8 @@ class Backtesting:
 # 获取所有回测数据
 
 
-backtester = Backtesting(mode="双低", name="双低", setting=Setting())
-backtester.run()
+# backtester = Backtesting(mode="双低", name="双低", setting=Setting())
+# backtester.run()
 
 # backtester2 = Backtesting(dataFrame, mode="低价", name="低价")
 # backtester2.run()

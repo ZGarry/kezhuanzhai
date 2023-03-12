@@ -5,10 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Bootstrap demo</title>
     <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+      href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.2.3/css/bootstrap.min.css"
       rel="stylesheet"
-      integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD"
-      crossorigin="anonymous"
     />
   </head>
   <body>
@@ -21,15 +19,39 @@
     <input type="text" id="mode" name="mode" placeholder="双低" />
     名称:
     <input type="text" id="name" name="name" placeholder="双低" />
-    <button ></button>
+    <button onclick="submit()" type="button" class="btn btn-primary">
+      提交
+    </button>
     <br />
     <div class="ratio ratio-16x9">
-      <iframe src="result.html" title="内容" allowfullscreen></iframe>
+      <iframe
+        id="iframe"
+        src="./result.html"
+        title="内容"
+        allowfullscreen
+      ></iframe>
     </div>
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-/mhDoLbDldZc3qpsJHpLogda//BVZbgYuw6kof4u2FrCedxOtgRZDTHgHUhOCVim"
-      crossorigin="anonymous"
-    ></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.2.3/js/bootstrap.bundle.min.js"></script>
+    <!--引入jQuery包用于使用ajax-->
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script>
+      function submit() {
+        $.ajax({
+          url: "http://localhost:5000/submit",
+          type: "POST",
+          data: {
+            name: $("#name").val(),
+            mode: $("#mode").val(),
+          },
+          success: function (result) {
+            if (result.message == "success!") {
+              console.log(result);
+              // 刷新iframe
+              $("#iframe").attr("src", $("#iframe").attr("src"));
+            }
+          },
+        });
+      }
+    </script>
   </body>
 </html>
