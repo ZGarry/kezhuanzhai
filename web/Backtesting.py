@@ -1,6 +1,6 @@
 
-from Painter import Painter
 from Setting import Setting
+from Painter import Painter
 
 need_log = False
 
@@ -16,13 +16,17 @@ class Backtesting:
         self.name = name  # 策略名称
         self.setting = setting  # 设置
 
+        self.df = self.setting.df  # 总数据
+        self.day2df = self.setting.day2df  # 日数据
+        self.dateRange = self.setting.dateRange  # 时间范围
+
         self.myPosition = {}  # 当前持仓列表
         self.posHigh = {}  # 持仓股票的最高位
         self.myCash = setting.initCash  # 现金
         self.myHoldNum = 10  # 持债支数
 
         self.posValueList = []  # 市值变化列表
-        self.today_low = None  # 今日低价格数据
+        self.today_low = None  # 今日低价格数据(可买入部分)
         self.today_df = None
 
     def dont_have_value(self, name):
@@ -35,8 +39,7 @@ class Backtesting:
             price = self.today_df[self.today_df['secShortNameBond']
                                   == name]['closePriceBond'].iloc[0]
         except:
-            date_str = self.today_df['tradeDate'].iloc[0]
-            printL(f'{date_str},{name}已退市，未读取到数据')
+            # printL(f'{date_str},{name}已退市，未读取到数据')
             price = self.df[self.df['secShortNameBond']
                             == name].iloc[-1]['closePriceBond']
             return price
@@ -61,9 +64,9 @@ class Backtesting:
             self.preCheck()
 
             self.sell_all()
-            
+
             self.buy_all()
-            
+
             self.afterCheck()
 
         # save
@@ -83,16 +86,15 @@ class Backtesting:
                 :self.myHoldNum]
         elif self.mode == "100-130策略":
             today_df_low = self.today_df[self.today_df['closePriceBond'] <= 100]
+        self.today_low = set(today_df_low['secShortNameBond'])
 
-        # self.today_low = set(today_df_low['secShortNameBond'])
-
-        # 持仓最高位更新
-        # for pos in self.myPosition:
-        #     self.posHigh[pos] = max(self.posHigh.get(
-        #         pos, 0), self.get_last_price(pos))
+        # 对应股票最高价格更新
+        for pos in self.myPosition:
+            self.posHigh[pos] = max(self.posHigh.get(
+                pos, 0), self.get_last_price(pos))
 
     # 检查当日市值
-    def check2(self):
+    def afterCheck(self):
         # 进入新的一天，计算当前市值
         today_pos_value = sum(self.get_last_price(
             pos)*self.myPosition[pos] for pos in self.myPosition) + self.myCash
@@ -103,20 +105,17 @@ class Backtesting:
         # 卖出
         need_sell = []
         for pos in self.myPosition.keys():
-            # 如果退市了
-            
-
-            if self.mode == "100-130策略":
-                # 退市时需要以退市价格卖出
-                if self.dont_have_value(pos) or self.get_last_price(pos) >= 130:
-                    need_sell.append(pos)
-            elif self.mode.endswith("下跌10%卖出"):
-                if self.dont_have_value(pos) or self.get_last_price(pos) <= self.posHigh[pos] * 0.9:
-                    need_sell.append(pos)
-            elif self.mode.endswith("下跌10%卖出-130卖出"):
-                if self.dont_have_value(pos) or (self.get_last_price(pos) <= self.posHigh[pos] * 0.9 and self.get_last_price(pos) >= 130):
-                    need_sell.append(pos)
+            # 如果明日退市了,今日需卖出
+            if self.dont_have_value(pos):
+                need_sell.append(pos)
+            elif self.mode == "100-130策略" and self.get_last_price(pos) >= 130:
+                need_sell.append(pos)
+            elif self.mode.endswith("下跌10%卖出") and self.get_last_price(pos) <= self.posHigh[pos] * 0.9:
+                need_sell.append(pos)
+            elif self.mode.endswith("下跌10%卖出-130卖出") and self.get_last_price(pos) <= self.posHigh[pos] * 0.9 and self.get_last_price(pos) >= 130:
+                need_sell.append(pos)
             else:
+                # 低价策略
                 if pos in self.today_low:
                     continue
                 else:
@@ -183,13 +182,3 @@ backtester.run()
 # backtester6 = Backtesting(
 #     dataFrame, mode="低价-下跌10%卖出-130卖出", name="低价-下跌10%卖出-130卖出")
 # backtester6.run()
-
-# li = []
-# li.append(backtester)
-# li.append(backtester2)
-# li.append(backtester3)
-# li.append(backtester4)
-# li.append(backtester5)
-# li.append(backtester6)
-# p = Painter(li)
-# p.paint()
