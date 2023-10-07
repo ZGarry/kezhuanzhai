@@ -1,1 +1,84 @@
-<mxfile host="Electron" modified="2022-08-17T00:04:48.869Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/17.4.2 Chrome/100.0.4896.60 Electron/18.0.1 Safari/537.36" etag="ErjT-l23bTdK6bPzfY4W" version="17.4.2" type="device"><diagram id="ub1oEnI8AMDeyH76IsbE" name="第 1 页">5Zldb5swFIZ/jS8rYQz+uMQJ6dRpmqpO6jUNbkAjkBK6pPv1OzaQ4ECrTWsCVa9iv3b4eM7L4ZwEkdl6f11Gm+RbEasMuU68R2SOXBf7HoEPrbzUis9ELazKNG42HYW79LdqRKdRn9NYba2NVVFkVbqxxWWR52pZWVpUlsXO3vZYZPZZN9FK9YS7ZZT11fs0rpJa5S476l9UukraM2Pa3N86ajc3d7JNorjYdSQSIjIri6KqR+v9TGUaXsul/t7ildXDhZUqr/7mC0/uzTJTFf1x//Vp//0mjxe311fNUX5F2XNzw83FVi8tgbJ4zmOlD+IgIndJWqm7TbTUqzuIOWhJtc5ghmEYR9vE7NWT5tiqrNT+1YvGBxTgIVWsVVW+wJbmC1cH0o1/qOPV890xGj5rrjrpRMLzWhc0DlgdDn6EBIOG0z8wc/vMQoqEQDJAIUecIDlHoY/4AgULrcA0mBnFMXt8JGEzafZIp4cceFU2121VFj/VrMiKEpS8yGGnfEyz7ESKsnSVw3QJfBXoUtNPwc5Bs7BO41ifZjCQdqjPHstD3DqxpE4/lMQ5UyTJO7v/XSA5xDa8S/qGJ36fEnb9M2HyBgzPkAB7+9reYHJOjasx4n2C0zDze4SGCf8kNHxc//ofwL+M0rH9Swf9G8yRoMbIvjHyZ/Cva4eGOeP6l03Sv9iCJBw2tn/5gH8h7WIUcO1fHuoa4jP4lws7NBiP618xGBjp6dyiizuTWOAMelxnGxgwUwNSXfoJCJvQL0/xlvHxZYzPXDtxi/Zp7NDFbXK38Ioz4W17wBO+QDAwVTQPzBPgIQmibCm/Qvy/+HYfDuSSh2jJY9J7kmDFJZ7nx+eKCOvXGxeOyEC/+Fan06sSx3c5sd+B1Oun9wszHeongVeoM7yuU0IkmOkwZxNlSrE/NaYDnZ0miHXOAHsGkKKZzr3AUc4GqsHRmTLXZsp4vw28MNOhNtC4kpvXWCCRqLOxRJJdmVdc0JW0IgkSE6TLvdHfdQO9HLgREiqYVtPFSE4AHHVOSrDxi4Sh7q5TJOj0GRgPQqUlhho/Y8+AmCUHcfwRS4XTuEwgXQw0d7pHCXVENPOF9rS7uL01Pg91Tp5gVUwdaht+/BpsqB2kpuKSBiXkYWIyM9VPAQx0p0jGR+md/Pwg3P5P+RdG2W/gVmmVPD+0GdfkCyGNZX1TgJlGW8w17ukBPaM3YXr8q8qsdf7wI+Ef</diagram></mxfile>
+<mxfile host="Electron" modified="2023-09-08T00:46:11.117Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/21.6.8 Chrome/114.0.5735.289 Electron/25.5.0 Safari/537.36" etag="4kIivpWkrgazJYYezxEO" version="21.6.8" type="device" pages="2">
+  <diagram id="ub1oEnI8AMDeyH76IsbE" name="第 1 页">
+    <mxGraphModel dx="1621" dy="525" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="q2Jclet6TWKqxOJndFQG-1" value="" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;" parent="1" vertex="1">
+          <mxGeometry x="-827" y="604" width="572" height="441" as="geometry" />
+        </mxCell>
+        <mxCell id="q2Jclet6TWKqxOJndFQG-2" value="智能可转债平台" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;dashed=1;" parent="1" vertex="1">
+          <mxGeometry x="-827" y="572" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="q2Jclet6TWKqxOJndFQG-3" value="" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="-803" y="623" width="535" height="125" as="geometry" />
+        </mxCell>
+        <mxCell id="q2Jclet6TWKqxOJndFQG-4" value="知识层" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+          <mxGeometry x="-795" y="628" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="q2Jclet6TWKqxOJndFQG-5" value="" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="-803" y="766" width="535" height="125" as="geometry" />
+        </mxCell>
+        <mxCell id="q2Jclet6TWKqxOJndFQG-6" value="策略层" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+          <mxGeometry x="-792" y="770" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="q2Jclet6TWKqxOJndFQG-7" value="" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="-801" y="907" width="535" height="125" as="geometry" />
+        </mxCell>
+        <mxCell id="q2Jclet6TWKqxOJndFQG-8" value="表现层" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+          <mxGeometry x="-789" y="911" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="q2Jclet6TWKqxOJndFQG-9" value="购入/卖出提醒" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="-723" y="922" width="103" height="39" as="geometry" />
+        </mxCell>
+        <mxCell id="q2Jclet6TWKqxOJndFQG-10" value="自动下单/卖出" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#bac8d3;strokeColor=#23445d;" parent="1" vertex="1">
+          <mxGeometry x="-723" y="978" width="103" height="39" as="geometry" />
+        </mxCell>
+        <mxCell id="q2Jclet6TWKqxOJndFQG-11" value="可转债知识" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="-732" y="647" width="103" height="39" as="geometry" />
+        </mxCell>
+        <mxCell id="q2Jclet6TWKqxOJndFQG-12" value="计算机知识" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="-615" y="647" width="103" height="39" as="geometry" />
+        </mxCell>
+        <mxCell id="q2Jclet6TWKqxOJndFQG-13" value="摊大饼策略" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="-725" y="783" width="103" height="39" as="geometry" />
+        </mxCell>
+        <mxCell id="q2Jclet6TWKqxOJndFQG-14" value="最高价-折价法" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="-725" y="842" width="103" height="39" as="geometry" />
+        </mxCell>
+        <mxCell id="q2Jclet6TWKqxOJndFQG-15" value="网页" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="-609" y="922" width="103" height="39" as="geometry" />
+        </mxCell>
+        <mxCell id="q2Jclet6TWKqxOJndFQG-16" value="自定义策略代码" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#bac8d3;strokeColor=#23445d;" parent="1" vertex="1">
+          <mxGeometry x="-609" y="783" width="103" height="39" as="geometry" />
+        </mxCell>
+        <mxCell id="q2Jclet6TWKqxOJndFQG-17" value="微信/QQ群提醒" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="-606" y="978" width="103" height="39" as="geometry" />
+        </mxCell>
+        <mxCell id="q2Jclet6TWKqxOJndFQG-18" value="总结文档" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="-380" y="647" width="103" height="39" as="geometry" />
+        </mxCell>
+        <mxCell id="q2Jclet6TWKqxOJndFQG-19" value="github项目地址" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="-492" y="647" width="103" height="39" as="geometry" />
+        </mxCell>
+        <mxCell id="55Coi4IvosUpPzHoVRXi-1" value="双底策略" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="-609" y="842" width="103" height="39" as="geometry" />
+        </mxCell>
+        <mxCell id="55Coi4IvosUpPzHoVRXi-2" value="回测&amp;amp;&lt;br&gt;历史数据分析" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="-492" y="922" width="103" height="39" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="1hk2NAOGcU-iVlL_GI34" name="第 2 页">
+    <mxGraphModel dx="713" dy="579" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="EmQKtCuOwHSJPzUKMK4d-1" value="Text" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="130" y="70" width="60" height="30" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

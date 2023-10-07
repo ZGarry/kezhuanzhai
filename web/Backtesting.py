@@ -161,24 +161,5 @@ class Backtesting:
         del self.myPosition[name]
 
 
-# 获取所有回测数据
 
-
-# backtester = Backtesting(mode="双低", name="双低", setting=Setting())
-# backtester.run()
-
-# backtester2 = Backtesting(dataFrame, mode="低价", name="低价")
-# backtester2.run()
-
-# backtester3 = Backtesting(dataFrame, mode="100-130策略", name="100-130策略")
-# backtester3.run()
-
-# backtester4 = Backtesting(dataFrame, mode="双低-下跌10%卖出", name="双低-下跌10%卖出")
-# backtester4.run()
-
-# backtester5 = Backtesting(dataFrame, mode="低价-下跌10%卖出", name="低价-下跌10%卖出")
-# backtester5.run()
-
-# backtester6 = Backtesting(
-#     dataFrame, mode="低价-下跌10%卖出-130卖出", name="低价-下跌10%卖出-130卖出")
-# backtester6.run()
+    

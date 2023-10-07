@@ -29,3 +29,13 @@ class StrageyPool:
 
         # paint
         Painter(self.backtesterList).paint()
+
+
+if __name__ == '__main__':
+    strageyPool = StrageyPool(setting=Setting())
+    strageyPool.rebuild([("双低","双低"),
+            ("低价","低价"),
+            ("100-130策略","100-130策略"),
+            ("双低-下跌10%卖出","双低-下跌10%卖出"),
+            ("低价-下跌10%卖出","低价-下跌10%卖出"),
+            ("低价-下跌10%卖出-130卖出","低价-下跌10%卖出-130卖出")])
