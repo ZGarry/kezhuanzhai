@@ -1,1 +1,1 @@
-test_mode = False
+test_mode = True
