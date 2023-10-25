@@ -7,9 +7,12 @@ import schedule
 from qmt.MyPos import MyPos
 from qmt.Settings import test_mode
 from qmt.init import xt_trader, acc
+from checkDebt import check_debt
 
 
 def daily_task():
+    check_debt()
+
     my.showMyPos()
     my.f_Low()
 
