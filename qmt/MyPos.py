@@ -5,9 +5,9 @@ from xtquant.xttrader import XtQuantTrader
 from xtquant.xttype import StockAccount
 import pandas as pd
 
-from qmt.Settings import test_mode
-from qmt.XiaoHei import xiaohei
-from qmt.util import getNameFromCode, s
+from Settings import test_mode
+from XiaoHei import xiaohei
+from util import getNameFromCode, s
 
 
 class MyPos:
@@ -31,7 +31,7 @@ class MyPos:
         positions = self.xt_trader.query_stock_positions(self.acc)
         _sum = 0
         prefix = ""
-        for i,pos in enumerate(positions):
+        for i, pos in enumerate(positions):
             self.myPos[pos.stock_code] = pos.volume
             print(f"股票{pos.stock_code}持有{pos.volume}股，市值{pos.market_value}，平均建仓成本{pos.open_price}")
             prefix += f"{i+1}.{getNameFromCode(pos.stock_code)}持有{pos.volume}股\n"
@@ -47,7 +47,7 @@ class MyPos:
         xiaohei.send_text(f"{xiaoheiStr}\n{prefix}")
 
     def now_cb_df(self):
-        ## 获取转债数据
+        # 获取转债数据
         data = xtdata.get_full_tick(['SH', 'SZ'])
         # 获取可转债相关数据(每一行都是不一样的数据)
         df = pd.DataFrame(data).transpose()
@@ -65,6 +65,15 @@ class MyPos:
             self.acc, stock_code, xtconstant.STOCK_BUY, count, xtconstant.LATEST_PRICE, -1, 'strategy_name',
             stock_code)
 
+    def direct_buy(self, stock_code, count):
+        self.xt_trader.order_stock_async(
+            self.acc, stock_code, xtconstant.STOCK_BUY, count, xtconstant.LATEST_PRICE, -1, 'strategy_name',
+            stock_code)
+
+    def direct_sell(self, stock_code, count):
+        self.xt_trader.order_stock_async(
+            self.acc, stock_code, xtconstant.STOCK_SELL, count, xtconstant.LATEST_PRICE, -1, 'strategy_name',
+            stock_code)
 
     def sell(self, stock_code, count):
         if test_mode:
@@ -77,7 +86,6 @@ class MyPos:
             self.acc, stock_code, xtconstant.STOCK_SELL, count, xtconstant.LATEST_PRICE, -1, 'strategy_name',
             stock_code)
 
-
     """
     获取目标预期买入股票信息
     """
@@ -85,11 +93,11 @@ class MyPos:
     def get_want_pos(self):
         df = self.now_cb_df()
 
-        ## 获取当前资金（从较低的开始，逐步买入，直到全部资金用完为之）
+        # 获取当前资金（从较低的开始，逐步买入，直到全部资金用完为之）
         # 预留1w做资金周转
         nowCash = self.allCash - 10000
 
-        ## 获取目标盘数据
+        # 获取目标盘数据
         wantPos = {}
         lowDf = list(df.sort_values('lastPrice')[:10].iterrows())
         while True:
@@ -103,9 +111,17 @@ class MyPos:
                     wantPos[stock_code] += 10
                 nowCash -= stock_info['lastPrice'] * 10
 
+    # 固定按照100一手的方式
+    def left_money_buy_day1_ni_hui_gou(self):
+        asset = self.xt_trader.query_stock_asset(self.acc)
+
+        # 买入深市所有逆回购
+        # 最少需要1k1k一购买
+        self.direct_sell('204001.SH', int(int(asset.cash/100)/10)*10)
+
     def f_Low(self):
 
-        ## 低价策略
+        # 低价策略
         # dict1 = {"苹果": 1, "橘子": 2, "香蕉": 3}
         # dict2 = {"苹果": 2, "橘子": 2, "葡萄": 4}
 

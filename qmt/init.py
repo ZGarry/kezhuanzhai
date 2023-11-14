@@ -7,14 +7,14 @@ from xtquant import xtdata
 from xtquant.xttrader import XtQuantTrader
 from xtquant.xttype import StockAccount
 
-from qmt.MyXtQuantTraderCallBack import MyXtQuantTraderCallback
+from MyXtQuantTraderCallBack import MyXtQuantTraderCallback
 
 xtdata.download_sector_data()
 
 # 启动xt_trader
 print("start")
 # 指定客户端所在路径
-path = r'D:\国金证券QMT交易端\userdata_mini'
+path = r'C:\temp\soft\国金证券QMT交易端\userdata_mini'
 # 生成session id 整数类型 同时运行的策略不能重复
 session_id = int(time.time())
 xt_trader = XtQuantTrader(path, session_id)

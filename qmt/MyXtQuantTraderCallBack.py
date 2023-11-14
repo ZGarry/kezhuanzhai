@@ -2,7 +2,7 @@ import datetime
 import sys
 from xtquant.xttrader import XtQuantTraderCallback
 
-from qmt.XiaoHei import xiaohei
+from XiaoHei import xiaohei
 
 
 class MyXtQuantTraderCallback(XtQuantTraderCallback):

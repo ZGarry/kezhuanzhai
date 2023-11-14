@@ -1,6 +1,6 @@
 import time
 import datetime
-import traceback
+# import traceback
 import sys
 from xtquant import xtdata
 from xtquant.xttrader import XtQuantTrader, XtQuantTraderCallback
