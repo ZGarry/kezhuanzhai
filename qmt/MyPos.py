@@ -7,10 +7,11 @@ import pandas as pd
 
 from Settings import test_mode
 from XiaoHei import xiaohei
-from util import getNameFromCode, s
+from util import getNameFromCode, s, get_all_data, to_long_name
 
 
 class MyPos:
+    # 里面存着当前持有股票情况
     myPos = {}
     # 全部资金，包括现金 + 当前持有资金
     allCash = None
@@ -32,6 +33,8 @@ class MyPos:
         _sum = 0
         prefix = ""
         for i, pos in enumerate(positions):
+            if pos.volume <= 0:
+                continue
             self.myPos[pos.stock_code] = pos.volume
             print(f"股票{pos.stock_code}持有{pos.volume}股，市值{pos.market_value}，平均建仓成本{pos.open_price}")
             prefix += f"{i+1}.{getNameFromCode(pos.stock_code)}持有{pos.volume}股\n"
@@ -62,17 +65,7 @@ class MyPos:
             return
 
         self.xt_trader.order_stock_async(
-            self.acc, stock_code, xtconstant.STOCK_BUY, count, xtconstant.LATEST_PRICE, -1, 'strategy_name',
-            stock_code)
-
-    def direct_buy(self, stock_code, count):
-        self.xt_trader.order_stock_async(
-            self.acc, stock_code, xtconstant.STOCK_BUY, count, xtconstant.LATEST_PRICE, -1, 'strategy_name',
-            stock_code)
-
-    def direct_sell(self, stock_code, count):
-        self.xt_trader.order_stock_async(
-            self.acc, stock_code, xtconstant.STOCK_SELL, count, xtconstant.LATEST_PRICE, -1, 'strategy_name',
+            self.acc, stock_code, xtconstant.STOCK_BUY, count, xtconstant.LATEST_PRICE, -1, 'my_strategy',
             stock_code)
 
     def sell(self, stock_code, count):
@@ -83,41 +76,67 @@ class MyPos:
         if count < 0:
             count = -count
         self.xt_trader.order_stock_async(
-            self.acc, stock_code, xtconstant.STOCK_SELL, count, xtconstant.LATEST_PRICE, -1, 'strategy_name',
+            self.acc, stock_code, xtconstant.STOCK_SELL, count, xtconstant.LATEST_PRICE, -1, 'my_strategy',
             stock_code)
 
-    """
-    获取目标预期买入股票信息
-    """
-
-    def get_want_pos(self):
-        df = self.now_cb_df()
-
-        # 获取当前资金（从较低的开始，逐步买入，直到全部资金用完为之）
-        # 预留1w做资金周转
-        nowCash = self.allCash - 10000
+    def two_low_want(self, df):
+        ##
+        print(f'当前剩余现金{self.allCash}')
+        nowCash = self.allCash - 1000
 
         # 获取目标盘数据
         wantPos = {}
-        lowDf = list(df.sort_values('lastPrice')[:10].iterrows())
+        my = list(df[:10].iterrows())
         while True:
-            for stock_code, stock_info in lowDf:
-                if nowCash < stock_info['lastPrice'] * 10:
+            for index, items in my:
+                if nowCash < items['现价'] * 10:
                     return wantPos
 
+                stock_code = to_long_name(items['代码'])
                 if stock_code not in wantPos:
                     wantPos[stock_code] = 10
                 else:
                     wantPos[stock_code] += 10
-                nowCash -= stock_info['lastPrice'] * 10
+                nowCash -= items['现价'] * 10
 
     # 固定按照100一手的方式
-    def left_money_buy_day1_ni_hui_gou(self):
+    # 如何获得正股规模
+    def buy_ni_hui_gou(self):
         asset = self.xt_trader.query_stock_asset(self.acc)
+        need_buy = asset.cash - 100000
+        if need_buy < 1000:
+            return
 
         # 买入深市所有逆回购
         # 最少需要1k1k一购买
-        self.direct_sell('204001.SH', int(int(asset.cash/100)/10)*10)
+        self.sell('204001.SH', int(int(need_buy/100)/10)*10)
+
+    # 双底策略，且不买市值过低的公司
+    def two_low(self):
+        x = get_all_data()
+        x = x[x['正股总市值'] > 50 * 10 ** 8]
+
+        # 按照'双低'列进行升序排序
+        sorted_df = x.sort_values(by='双低', ascending=True)
+        wantPos = self.two_low_want(sorted_df)
+        # 对两个字典做差
+        diff_dict = {key: wantPos.get(key, 0) - self.myPos.get(key, 0) for key in set(self.myPos) | set(wantPos)}
+
+        # 从小到大排序
+        diff_dict = dict(sorted(diff_dict.items(), key=lambda item: item[1]))
+        diff_dict['888880.SH'] = 0
+        xiaoheiStr = ""
+        for key in diff_dict.keys():
+            print(f"{key}应该操作{diff_dict[key]}股")
+
+            if diff_dict[key] > 0:
+                self.buy(key, diff_dict[key])
+                xiaoheiStr += f"买入{getNameFromCode(key)} {diff_dict[key]}股\n"
+            elif diff_dict[key] < 0:
+                self.sell(key, diff_dict[key])
+                xiaoheiStr += f"卖出{getNameFromCode(key)} {diff_dict[key]}股\n"
+
+        xiaohei.send_text(xiaoheiStr)
 
     def f_Low(self):
 

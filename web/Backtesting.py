@@ -9,6 +9,7 @@ def printL(s):
     if need_log:
         print(s)
 
+## 提供界面没有什么用，让自己可以快速的对不同数据跑回测才是最重要的
 
 class Backtesting:
     def __init__(self, mode="双低", name="default", setting=Setting()):
