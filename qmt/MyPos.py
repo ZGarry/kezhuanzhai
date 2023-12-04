@@ -28,6 +28,17 @@ class MyPos:
         asset = self.xt_trader.query_stock_asset(self.acc)
         self.allCash = asset.cash + asset.market_value
 
+    def get_all_money():
+        x = my.xt_trader.query_stock_asset(my.acc)
+        return asset.cash + asset.market_value
+
+    def get_all_cash():
+        x = my.xt_trader.query_stock_asset(my.acc)
+        return asset.cash
+
+    def get_real_gupiao(myPos):
+        return sum(value for key, value in myPos if key != '888880.SH')
+
     def showMyPos(self):
         positions = self.xt_trader.query_stock_positions(self.acc)
         _sum = 0
@@ -81,15 +92,14 @@ class MyPos:
 
     def two_low_want(self, df):
         ##
-        print(f'当前剩余现金{self.allCash}')
-        nowCash = self.allCash - 1000
+        needUseMoney = 100000
 
         # 获取目标盘数据
         wantPos = {}
         my = list(df[:10].iterrows())
         while True:
             for index, items in my:
-                if nowCash < items['现价'] * 10:
+                if needUseMoney < items['现价'] * 10:
                     return wantPos
 
                 stock_code = to_long_name(items['代码'])
@@ -97,13 +107,14 @@ class MyPos:
                     wantPos[stock_code] = 10
                 else:
                     wantPos[stock_code] += 10
-                nowCash -= items['现价'] * 10
+                needUseMoney -= items['现价'] * 10
 
     # 固定按照100一手的方式
     # 如何获得正股规模
     def buy_ni_hui_gou(self):
         asset = self.xt_trader.query_stock_asset(self.acc)
-        need_buy = asset.cash - 100000
+        # 剩余1k元即可
+        need_buy = asset.cash - 1000
         if need_buy < 1000:
             return
 

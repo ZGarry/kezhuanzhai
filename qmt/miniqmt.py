@@ -16,11 +16,11 @@ def daily_task():
     # 股票信息展示（必须-同时获取股票信息）
     my.showMyPos()
 
-    # 买逆回购，并且剩下一定钱
-    my.buy_ni_hui_gou()
-
     # 跑策略
     my.two_low()
+
+    # 买逆回购，剩下的资金买逆回购
+    my.buy_ni_hui_gou()
 
 
 def good_morning():
@@ -31,17 +31,19 @@ my = MyPos(xt_trader, acc)
 # 日常事务检查
 registChecker()
 
-if test_mode:
-    # 测试任务
-    good_morning()
-    daily_task()
+daily_task()
 
-else:
-    # 早上好
-    schedule.every().day.at("08:35").do(good_morning)
-    # 正常买入
-    schedule.every().day.at("09:41").do(daily_task)
+# if test_mode:
+#     # 测试任务
+#     good_morning()
+#     daily_task()
 
-    while True:
-        schedule.run_pending()
-        time.sleep(1)
+# else:
+#     # 早上好
+#     schedule.every().day.at("08:35").do(good_morning)
+#     # 正常买入
+#     schedule.every().day.at("09:41").do(daily_task)
+
+#     while True:
+#         schedule.run_pending()
+#         time.sleep(1)
