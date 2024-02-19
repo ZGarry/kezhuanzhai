@@ -7,7 +7,7 @@
 
 ## 项目图片
 ![1678511676199](image/readme/1678511676199.png)
-![img.png](image/img.png)![img.png](image/img.png)
+![img.png](image/img.png)
 
 ## 背景
 可转债的数字化研究越来越重要，但是数据的缺失、框架的缺失，让这种研究推进速度并非那么如意。
