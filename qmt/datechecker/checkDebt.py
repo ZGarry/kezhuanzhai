@@ -1,5 +1,5 @@
 import datetime
-from XiaoHei import xiaohei
+from ..dingding.XiaoHei import xiaohei
 # 我的债务
 # 1. 杭州联合银行 50w 3.8% 每个月20号 每个月还1583.3元，开始日20230426-20260409
 # 2. 中国信银行 30w 3.5% 每个月21号 每个月还875元，开始日20230428-结束日20240428

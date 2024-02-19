@@ -1,3 +1,4 @@
+from functools import cache
 import akshare as ak
 import pandas as pd
 
@@ -5,6 +6,9 @@ df = ak.bond_zh_cov()
 
 
 def getNameFromCode(stock_code):
+    if '.' not in stock_code:
+        stock_code = to_long_name(stock_code)
+
     bond_code = stock_code.split(".")[0]
     line = df.loc[df["债券代码"] == bond_code, "债券简称"]
     if line.empty:
@@ -20,6 +24,8 @@ def sizeBigThan(stock_code):
 
 
 def s(num):
+    if num == 0:
+        return "0"
     if num.is_integer():
         return str(int(num))
     else:
@@ -32,16 +38,19 @@ def get_all_data():
     import akshare as ak
 
     all_cube = get_data()
+    all_cube.reset_index(level=0, inplace=True)
+    all_cube.rename(columns={'index': '可转债代码'}, inplace=True)
 
     all_stock = ak.stock_zh_a_spot_em()
     # 使用 merge 方法关联表A和表B，基于正股代码列
     merged_df = pd.merge(all_cube, all_stock, left_on='正股代码', right_on='代码', how='left')
-    all_cube['正股总市值'] = merged_df['总市值']
 
-    if len(all_cube) < 100:
+    if len(merged_df) < 100:
         raise Exception
 
-    return all_cube
+    merged_df["正股总市值"] = merged_df["总市值"]
+
+    return merged_df
 
 
 def to_long_name(code):
@@ -51,22 +60,32 @@ def to_long_name(code):
 
 
 def get_data():
-    import akshare as ak
-    import webbrowser
-    url = "https://app.jisilu.cn/data/cbnew/#cb"
-    webbrowser.open(url)
-    s = gen_cookie()
-    for i in range(20):
-        bond_cb_jsl_df = ak.bond_cb_jsl(cookie=s)
-        if len(bond_cb_jsl_df) > 300:
-            return bond_cb_jsl_df
-    raise Exception('执行了一定次数最后还是没有跑完')
+    from qmt.jisilu.jisilu_data import Jisilu
+    obj = Jisilu()
+    data = obj.run()
+    return data
 
 
-def gen_cookie():
-    import time
+@cache
+def get_trade_date_hist_sina(year):
+    tool_trade_date_hist_sina_df = ak.tool_trade_date_hist_sina()
+    return tool_trade_date_hist_sina_df
 
-    # 获取当前的秒级时间戳
-    timestamp = int(time.time())*1000
-    cookie = f"kbz_newcookie=1; kbz__user_login=1ubd08_P1ebax9aXXB4WRiEuSR_7lbSi2drf6tnl09fWvpvHqt_YzKnPrZupk6PZwqCRqt2noN6gp8XckquskamYq5qwlu7V28DTjKSokaKZpLGWpKaty8DTjKSvkaGXpKmtnKmNso_LotHVjL3Q7uLh1dqbrJCmgZvPyt7F4_DoicfAl5Omj6OzgcfK4q-ppJnkrZafgbTo0dzGy97XtOLgppepmKGrl5CJv8HJtsWYl87fzNiYqNXE3-ieibzU6dHjxqKpkqmPpKell6mMysPcwuXhkKWUq6eonw..; kbzw__Session=ermpq6dp20spnhfpo4r0ot45t4; Hm_lvt_164fe01b1433a19b507595a43bf58262={timestamp}; kbzw__user_login=7Obd08_P1ebax9aXXB4WRiUtWyf7kZyh6dbc7OPm1Nq_1KLZrsfTxKTcq6KsnqfD15GnrdeqmNWVpNzbmrGgp5utmJiyoO3K1L_RpKaZqZ6vkq6CsqS0zL_NjKWwpZqvoquZr5OYsqDNos6-n8bk4-LY48OllqWnk6C42c_Y6OzcmbrLgqeRpaeumLjZz6qtsInxoquLlqLn59_duNXDv-LpmK6frpCpl5efvsC1va2gmeHS5NGXqdvE4uacmKTY0-Pm2piqnbCQpo-npaOYtNHH1evemK6frpCplw..; Hm_lpvt_164fe01b1433a19b507595a43bf58262=1701664800; SERVERID=0e73f01634e37a9af0b56dfcd9143ef3|1701664816|1701664770"
-    return cookie
+
+def today_is_trade_day():
+    # 获取今天年
+    from datetime import datetime
+    current_datetime = datetime.now()
+    current_year = current_datetime.year
+
+    # 获取全量数据
+    df = get_trade_date_hist_sina(current_year)
+
+    # 获取今天年月日
+    today_str = current_datetime.strftime("%Y-%m-%d")
+    today = datetime.strptime(today_str, "%Y-%m-%d").date()
+    # 判断今天是否是交易日
+    if today in df['trade_date'].values:
+        return True
+    else:
+        return False

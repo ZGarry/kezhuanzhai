@@ -1,6 +1,6 @@
 import datetime
 import threading
-from XiaoHei import xiaohei
+from ..dingding.XiaoHei import xiaohei
 
 
 class DateChecker:
@@ -51,4 +51,4 @@ date_checker = DateChecker()
 
 def registChecker():
     date_checker.add_event(day=29, event_name="统计当前自己资金")  # Add monthly tasks
-    date_checker.start()  # Start the checker
+    date_checker.start()  # Start the datechecker

@@ -2,8 +2,6 @@ import datetime
 import sys
 from xtquant.xttrader import XtQuantTraderCallback
 
-from XiaoHei import xiaohei
-
 
 class MyXtQuantTraderCallback(XtQuantTraderCallback):
     def on_disconnected(self):
