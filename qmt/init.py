@@ -16,6 +16,8 @@ acc = None
 
 
 def init():
+    global xt_trader
+    global acc
     xtdata.download_sector_data()
 
     # 启动xt_trader

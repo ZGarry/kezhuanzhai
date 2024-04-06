@@ -27,6 +27,7 @@ def daily_task():
     if init_flag:
         my.buy_ni_hui_gou()
 
+# 如果程序在休眠中，但是错过了某一时间，打开后，会把那个时间的动作补上
 # 早安操作，做一些造成进行的内容
 def good_morning():
     # 个人股票展示
@@ -54,7 +55,7 @@ else:
     # 早上好
     schedule.every().day.at("08:35").do(good_morning)
     # 正常买入
-    schedule.every().day.at("13:35").do(daily_task)
+    schedule.every().day.at("13:52").do(daily_task)
 
     while True:
         schedule.run_pending()

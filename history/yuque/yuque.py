@@ -1,4 +1,7 @@
-# 用这个可以创建一篇新的文档，但是总体而言，没什么用。做的东西太薄了，手动创建一下，一摸一样。提醒功能也是一样的。
+###
+###
+### 用这个可以创建一篇新的文档，但是总体而言，没什么用。做的东西太薄了，手动创建一下，一摸一样。提醒功能也是一样的。
+### 而且还无法放入一篇目录中。不如做个跳转能力差不多饿了
 import requests
 token = "pOjxLEomTonND2KSTHDMbAqPyn2oxmak5UhjWTID"
 API_PATH = "https://www.yuque.com/api/v2"

@@ -120,6 +120,8 @@ class MyPos:
         diff_dict['888880.SH'] = 0
         # etf也不进行出售
         diff_dict['510050.SH'] = 0
+        # 格力电器也不进行出售
+        diff_dict['000651.SZ'] = 0
         xiaoheiStr = ""
         for key in diff_dict.keys():
             print(f"{key}应该操作{diff_dict[key]}股")
