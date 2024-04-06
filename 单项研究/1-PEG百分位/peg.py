@@ -1,4 +1,4 @@
-## 真正计算得到PEG
+# 真正计算得到PEG
 import akshare as ak
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -7,13 +7,13 @@ plt.rcParams['font.sans-serif'] = ['Simhei']
 
 
 def genROEdf(stock="000651", start_year="2000", need_change=True):
-    ## 可以看一下这个ROEdf的数据输出
+    # 可以看一下这个ROEdf的数据输出
     stock_financial_analysis_indicator_df = ak.stock_financial_analysis_indicator(symbol=stock, start_year=start_year)
     ROEdf = stock_financial_analysis_indicator_df[['日期', '净资产收益率(%)']].sort_values(by='日期', ascending=True)
 
     ROEdf['日期'] = pd.to_datetime(ROEdf['日期'])
 
-    ## 对日季度的ROE做处理
+    # 对日季度的ROE做处理
     def apply_condition(row):
         if row['日期'].month == 3 and row['日期'].day == 31:
             return row['净资产收益率(%)'] * 4
@@ -24,6 +24,8 @@ def genROEdf(stock="000651", start_year="2000", need_change=True):
         else:
             return row['净资产收益率(%)']
 
+    # 使用正则表达式匹配只有数字的模式
+    ROEdf = ROEdf[ROEdf['净资产收益率(%)'].str.match(r'^\d+\.?\d*$')]
     ROEdf['净资产收益率(%)'] = ROEdf['净资产收益率(%)'].astype(float)
     # 应用条件操作，ROE进行标准化计算
     if need_change:
@@ -108,6 +110,6 @@ def ROErate(ROEdf):
     return percentile
 
 
-ROEdf,PEdf,PEGdf = genMergedDf()
+ROEdf, PEdf, PEGdf = genMergedDf("603688")
 showPE(PEdf)
 showPEG(PEGdf)
