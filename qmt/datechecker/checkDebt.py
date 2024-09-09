@@ -37,11 +37,11 @@ class Loan:
 # 创建贷款对象
 loan1 = Loan("杭州联合银行", 500000, 3.8, datetime.date(
     2023, 4, 26), datetime.date(2026, 4, 9), 20, 1583.3)
-loan2 = Loan("中信银行", 300000, 3.5, datetime.date(
-    2023, 4, 28), datetime.date(2024, 4, 28), 21, 875)
+# loan2 = Loan("中信银行", 300000, 3.5, datetime.date(
+#     2023, 4, 28), datetime.date(2024, 4, 28), 21, 875)
 
 
 def check_debt():
     # 判断是否是还款日并输出还款信息
     loan1.print_installment_info()
-    loan2.print_installment_info()
+    # loan2.print_installment_info()

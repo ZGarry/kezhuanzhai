@@ -43,7 +43,8 @@ class DateChecker:
     def start(self):
         self.check_events()
         # 60s-后执行
-        threading.Timer(60, self.start).start()  # Check every minute
+        # 反复执行就不需要了，简单点，只执行一次
+        # threading.Timer(60, self.start).start()  # Check every minute
 
 
 date_checker = DateChecker()
@@ -51,4 +52,5 @@ date_checker = DateChecker()
 
 def registChecker():
     date_checker.add_event(day=29, event_name="统计当前自己资金")  # Add monthly tasks
+    date_checker.add_event(day=10, event_name="长沙房子-还贷-2000")  # Add monthly tasks
     date_checker.start()  # Start the datechecker
