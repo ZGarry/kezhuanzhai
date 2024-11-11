@@ -5,15 +5,16 @@ from xtquant.xttype import StockAccount
 import pandas as pd
 
 from Settings import test_mode
-from qmt.dingding.XiaoHei import xiaohei
-from util import getNameFromCode, s, get_all_data, to_long_name
+from dingding.XiaoHei import xiaohei
+from util import getNameFromCode, show, get_all_data, to_long_name
 
 
+# 我的持仓，里面记录了账号的大多数情况
 class MyPos:
-    # 里面存着当前持有股票情况
+    # 我的股票
     myPos = {}
     # 全部资金，包括现金 + 当前持有资金
-    allCash = None
+    allMoney = None
 
     def __init__(self, xt_trader: XtQuantTrader, acc: StockAccount, init_flag: bool):
         self.xt_trader = xt_trader
@@ -26,7 +27,7 @@ class MyPos:
             self.myPos[pos.stock_code] = pos.volume
 
         asset = self.xt_trader.query_stock_asset(self.acc)
-        self.allCash = asset.cash + asset.market_value
+        self.allMoney = asset.cash + asset.market_value
 
     def showMyPos(self):
         positions = self.xt_trader.query_stock_positions(self.acc)
@@ -42,10 +43,11 @@ class MyPos:
 
         print(f"总市值{_sum}")
 
+        # 此处股票持仓有问题，港股通部分没有展示
         asset = self.xt_trader.query_stock_asset(self.acc)
-        self.allCash = asset.cash + asset.market_value
+        self.allMoney = asset.total_asset
         print(f"现金:{asset.cash},股票持仓:{asset.market_value}")
-        xiaoheiStr = f"总金额:{s(_sum)},现金:{s(asset.cash)},股票持仓:{s(asset.market_value)}"
+        xiaoheiStr = f"总金额:{show(_sum)},现金:{show(asset.cash)},股票持仓:{show(asset.market_value)}"
 
         xiaohei.send_text(f"{xiaoheiStr}\n{prefix}")
 
@@ -71,7 +73,7 @@ class MyPos:
 
     def two_low_want(self, df):
         ##
-        needUseMoney = 100000
+        needUseMoney = 200000
 
         # 获取目标盘数据
         wantPos = {}
@@ -81,7 +83,7 @@ class MyPos:
                 if needUseMoney < items['可转债价格'] * 10:
                     return wantPos
 
-                stock_code = to_long_name(items['可转债代码'])
+                stock_code = to_long_name(index)
                 if stock_code not in wantPos:
                     wantPos[stock_code] = 10
                 else:
@@ -103,26 +105,35 @@ class MyPos:
 
     # 双底策略，且不买市值过低的公司
     def two_low(self):
-        x = get_all_data()
-        x = x[x['正股总市值'] > 50 * 10 ** 8]
+        import jisilu.jisilu_data as jisilu_data
+        data = jisilu_data.Jisilu().run()
+        ndata = data[(data['转债剩余占总市值比'] < 50) & (data['剩余时间'] > 0.3)].sort_values('双低',
+                                                                                               ascending=True).head(10)
 
-        if len(x) < 10:
-            raise Exception("使用50亿进行过滤后，不再有足够数量符合条件的可转债")
+        for index, name in ndata[['转债剩余占总市值比', '可转债名称', '正股代码', '双低', '可转债价格']].head(10)[
+            '可转债名称'].items():
+            print(f"可转债代码: {index}, 可转债名称: {name}")
+
+        if len(ndata) < 10:
+            raise Exception("进行过滤后，不再有足够数量符合条件的可转债")
 
         # 按照'双低'列进行升序排序
-        sorted_df = x.sort_values(by='双低', ascending=True)
-        wantPos = self.two_low_want(sorted_df)
+        wantPos = self.two_low_want(ndata)
         # 对两个字典做差
         diff_dict = {key: wantPos.get(key, 0) - self.myPos.get(key, 0) for key in set(self.myPos) | set(wantPos)}
 
         # 从小到大排序
         diff_dict = dict(sorted(diff_dict.items(), key=lambda item: item[1]))
-        diff_dict['888880.SH'] = 0
-        # etf也不进行出售
-        diff_dict['510050.SH'] = 0
-        # 格力电器也不进行出售
-        diff_dict['000651.SZ'] = 0
+        # 设置非12、11开头的代码为0
+        for key in list(diff_dict.keys()):
+            if not key.startswith(('12', '11')):
+                diff_dict[key] = 0
+            if '110092' in key:
+                diff_dict[key] = 0
+
         xiaoheiStr = ""
+        # 解决一下买入的时候可用资金不足的问题，需要预留一些资金，然后继续挂单
+        # 逆回购放到最后
         for key in diff_dict.keys():
             print(f"{key}应该操作{diff_dict[key]}股")
 

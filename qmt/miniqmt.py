@@ -5,9 +5,9 @@ import schedule
 from MyPos import MyPos
 from Settings import test_mode
 from init import xt_trader, acc, init_flag
-from qmt.datechecker.checkDebt import check_debt
-from qmt.datechecker.DateChecker import registChecker
-from qmt.dingding.XiaoHei import xiaohei
+from datechecker.checkDebt import check_debt
+from datechecker.DateChecker import registChecker
+from dingding.XiaoHei import xiaohei
 from util import today_is_trade_day
 
 def daily_task():
@@ -27,8 +27,6 @@ def daily_task():
     if init_flag:
         my.buy_ni_hui_gou()
 
-# 如果程序在休眠中，但是错过了某一时间，打开后，会把那个时间的动作补上
-# 早安操作，做一些造成进行的内容
 def good_morning():
     # 个人股票展示
     if init_flag:
@@ -55,7 +53,7 @@ else:
     # 早上好
     schedule.every().day.at("08:35").do(good_morning)
     # 正常买入
-    schedule.every().day.at("13:52").do(daily_task)
+    schedule.every().day.at("13:48").do(daily_task)
 
     while True:
         schedule.run_pending()

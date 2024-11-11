@@ -1,2 +1,6 @@
 *.dmp
 *.bkp
+.idea
+__pycache__
+.ipynotebook_checkpoints
+.\__pycache__

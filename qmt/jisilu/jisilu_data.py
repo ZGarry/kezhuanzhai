@@ -243,7 +243,7 @@ class Jisilu(BaseService):
         ret = js.json()
         bond_list = ret.get('rows', {})
         df = self.data_parse(bond_list, adjust_no_use)
-        print(df)
+        # print(df)
         # self.to_excel(df)
         return df
 
@@ -352,3 +352,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+

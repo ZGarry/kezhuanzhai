@@ -1,6 +1,6 @@
 import datetime
 import threading
-from ..dingding.XiaoHei import xiaohei
+from dingding.XiaoHei import xiaohei
 
 
 class DateChecker:

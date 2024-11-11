@@ -1,5 +1,5 @@
 from dingtalkchatbot.chatbot import DingtalkChatbot
-from ..Settings import dingding_talk_webhook, dingding_talk_secret
+from Settings import dingding_talk_webhook, dingding_talk_secret
 
 webhook = dingding_talk_webhook
 secret = dingding_talk_secret
