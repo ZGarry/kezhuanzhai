@@ -46,14 +46,21 @@ registChecker()
 
 if test_mode:
     # 测试任务
-    good_morning()
-    daily_task()
+    # good_morning()
+    # daily_task()
+    # 正常买入
+    schedule.every().day.at("13:10").do(daily_task)
+
+    while True:
+        schedule.run_pending()
+        time.sleep(1)
+
 
 else:
     # 早上好
     schedule.every().day.at("08:35").do(good_morning)
     # 正常买入
-    schedule.every().day.at("13:48").do(daily_task)
+    schedule.every().day.at("14:30").do(daily_task)
 
     while True:
         schedule.run_pending()
