@@ -1,17 +1,23 @@
 from functools import cache
 import akshare as ak
 import pandas as pd
+from joblib import Memory
 
-@cache
+memory = Memory(location='./cache_dir', verbose=0)
+
+@memory.cache
 def get_bond_info():
+    print(1)
     return ak.bond_zh_cov()
 
-@cache
+@memory.cache
 def get_stock_info():
+    print(2)
     return ak.stock_info_a_code_name()
 
-@cache
+@memory.cache
 def get_etf_info():
+    print(3)
     return ak.fund_etf_category_sina(symbol="ETF基金")
 
 # 这些其实每天执行一次就可以了

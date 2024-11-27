@@ -1,5 +1,4 @@
 # coding:utf-8
-
 import time
 import schedule
 from MyPos import MyPos
@@ -15,7 +14,7 @@ def daily_task():
         xiaohei.send_text(f"今天非交易日，不进行交易")
         return
 
-    # 股票信息展示（必须-同时获取股票信息）
+    # 股票信息展示
     if init_flag:
         my.showMyPos()
 
@@ -41,26 +40,15 @@ def good_morning():
 
 
 my = MyPos(xt_trader, acc, init_flag)
-# 日常事务检查
 registChecker()
 
 if test_mode:
-    # 测试任务
-    # good_morning()
-    # daily_task()
-    # 正常买入
-    schedule.every().day.at("13:10").do(daily_task)
-
-    while True:
-        schedule.run_pending()
-        time.sleep(1)
-
+    good_morning()
+    daily_task()
 
 else:
-    # 早上好
     schedule.every().day.at("08:35").do(good_morning)
-    # 正常买入
-    schedule.every().day.at("14:30").do(daily_task)
+    schedule.every().day.at("13:20").do(daily_task)
 
     while True:
         schedule.run_pending()

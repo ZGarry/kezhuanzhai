@@ -3,31 +3,53 @@ from xtquant import xtdata, xtconstant
 from xtquant.xttrader import XtQuantTrader
 from xtquant.xttype import StockAccount
 import pandas as pd
+from typing import Dict, Optional
+from dataclasses import dataclass
+import logging
 
 from Settings import test_mode
 from dingding.XiaoHei import xiaohei
 from util import getNameFromCode, show, get_all_data, to_long_name
 
+logger = logging.getLogger(__name__)
 
-# 我的持仓，里面记录了账号的大多数情况
+@dataclass
+class Position:
+    """持仓信息数据类"""
+    stock_code: str
+    volume: int
+    market_value: float
+    open_price: float
+
 class MyPos:
-    # 我的股票
     myPos = {}
-    # 全部资金，包括现金 + 当前持有资金
     allMoney = None
 
     def __init__(self, xt_trader: XtQuantTrader, acc: StockAccount, init_flag: bool):
         self.xt_trader = xt_trader
         self.acc = acc
         self.init_flag = init_flag
+        self.positions: Dict[str, Position] = {}
+        self.total_asset: Optional[float] = None
 
-    def refresh(self):
-        positions = self.xt_trader.query_stock_positions(self.acc)
-        for pos in positions:
-            self.myPos[pos.stock_code] = pos.volume
-
-        asset = self.xt_trader.query_stock_asset(self.acc)
-        self.allMoney = asset.cash + asset.market_value
+    def refresh(self) -> None:
+        """刷新持仓信息"""
+        try:
+            positions = self.xt_trader.query_stock_positions(self.acc)
+            self.positions.clear()
+            for pos in positions:
+                self.positions[pos.stock_code] = Position(
+                    pos.stock_code,
+                    pos.volume,
+                    pos.market_value,
+                    pos.open_price
+                )
+                
+            asset = self.xt_trader.query_stock_asset(self.acc)
+            self.total_asset = asset.total_asset
+        except Exception as e:
+            logger.error(f"刷新持仓失败: {e}")
+            raise
 
     def showMyPos(self):
         positions = self.xt_trader.query_stock_positions(self.acc)
@@ -145,3 +167,17 @@ class MyPos:
                 xiaoheiStr += f"卖出{getNameFromCode(key)} {diff_dict[key]}股\n"
 
         xiaohei.send_text(xiaoheiStr)
+
+class Position:
+    def __init__(self):
+        # 使用类型注解提高代码可读性
+        self.positions: Dict[str, float] = {}
+        
+    def update_position(self, symbol: str, quantity: float) -> None:
+        """更新持仓信息
+        
+        Args:
+            symbol: 股票代码
+            quantity: 持仓数量
+        """
+        self.positions[symbol] = quantity
