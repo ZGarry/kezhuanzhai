@@ -6,8 +6,6 @@ import pandas as pd
 from typing import Dict, Optional
 from dataclasses import dataclass
 import logging
-from decimal import Decimal
-from datetime import datetime
 
 from Settings import test_mode
 from dingding.XiaoHei import xiaohei
