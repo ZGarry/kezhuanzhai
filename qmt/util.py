@@ -1,33 +1,39 @@
 from functools import cache
 import akshare as ak
 import pandas as pd
-from joblib import Memory
+from diskcache import Cache
 
-memory = Memory(location='./cache_dir', verbose=0)
+cache_dir = './.cache'
+cache = Cache(cache_dir)
 
-@memory.cache
-def get_bond_info():
+@cache.memoize()
+def get_bond_info(date_str):
     print(1)
     return ak.bond_zh_cov()
 
-@memory.cache
-def get_stock_info():
+@cache.memoize()
+def get_stock_info(date_str):
     print(2)
     return ak.stock_info_a_code_name()
 
-@memory.cache
-def get_etf_info():
+@cache.memoize()
+def get_etf_info(date_str):
     print(3)
     return ak.fund_etf_category_sina(symbol="ETF基金")
 
+# 获取当日日期
+import datetime
+date_str = datetime.datetime.now().strftime('%Y%m%d')
+
 # 这些其实每天执行一次就可以了
-df = get_bond_info()
+df = get_bond_info(date_str)
 # 获取所有A股股票的代码和名称（不包含债券）
-stock_info = get_stock_info()
+stock_info = get_stock_info(date_str)
 # 获取所有ETF的信息
-etf_info = get_etf_info()
+etf_info = get_etf_info(date_str)
 
 # qmtLongCode shortCode 中文名
+@cache.memoize()
 def getNameFromCode(stock_code):
     if '.' not in stock_code:
         stock_code = to_long_name(stock_code)
@@ -58,39 +64,20 @@ def show(num):
         return "{:.2f}".format(num)
 
 
-def get_all_data():
-    import akshare as ak
-
-    all_cube = get_data()
-    all_cube.reset_index(level=0, inplace=True)
-    all_cube.rename(columns={'index': '可转债代码'}, inplace=True)
-
-    all_stock = ak.stock_zh_a_spot_em()
-    # 使用 merge 方法关联表A和表B，基于正股代码列
-    merged_df = pd.merge(all_cube, all_stock, left_on='正股代码', right_on='代码', how='left')
-
-    if len(merged_df) < 100:
-        raise Exception
-
-    merged_df["正股总市值"] = merged_df["总市值"]
-
-    return merged_df
-
 # 转换为qmt使用的长名
 def to_long_name(code):
     post_fix = 'SZ' if code.startswith('12') else 'SH'
     code = '{}.{}'.format(code, post_fix)
     return code
 
-
+# 从集思录获取数据
 def get_data():
     from jisilu.jisilu_data import Jisilu
     obj = Jisilu()
     data = obj.run()
     return data
 
-
-@cache
+@cache.memoize()
 def get_trade_date_hist_sina(year):
     tool_trade_date_hist_sina_df = ak.tool_trade_date_hist_sina()
     return tool_trade_date_hist_sina_df

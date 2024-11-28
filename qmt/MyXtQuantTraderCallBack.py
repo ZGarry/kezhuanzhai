@@ -1,9 +1,14 @@
 import datetime
 import sys
 from xtquant.xttrader import XtQuantTraderCallback
+import logging
 
 
 class MyXtQuantTraderCallback(XtQuantTraderCallback):
+    def __init__(self):
+        super().__init__()
+        self.trade_logger = logging.getLogger('trade')
+
     def on_disconnected(self):
         """
         连接断开
@@ -17,7 +22,10 @@ class MyXtQuantTraderCallback(XtQuantTraderCallback):
         :param order: XtOrder对象
         :return:
         """
-        print(datetime.datetime.now(), '委托回调', order.order_remark)
+        message = (f"委托回调 - 代码:{order.stock_code} - "
+                  f"状态:{order.status} - 委托价格:{order.price} - "
+                  f"委托数量:{order.volume} - 备注:{order.order_remark}")
+        self.trade_logger.info(message)
 
     def on_stock_trade(self, trade):
         """
@@ -25,7 +33,10 @@ class MyXtQuantTraderCallback(XtQuantTraderCallback):
         :param trade: XtTrade对象
         :return:
         """
-        print(datetime.datetime.now(), '成交回调', trade.order_remark)
+        message = (f"成交回调 - 代码:{trade.stock_code} - "
+                  f"成交价格:{trade.price} - 成交数量:{trade.volume} - "
+                  f"备注:{trade.order_remark}")
+        self.trade_logger.info(message)
 
     def on_order_error(self, order_error):
         """
@@ -33,9 +44,9 @@ class MyXtQuantTraderCallback(XtQuantTraderCallback):
         :param order_error:XtOrderError 对象
         :return:
         """
-        # print("on order_error callback")
-        # print(order_error.order_id, order_error.error_id, order_error.error_msg)
-        print(f"委托报错回调 {order_error.order_remark} {order_error.error_msg}")
+        message = (f"委托错误 - 备注:{order_error.order_remark} - "
+                  f"错误信息:{order_error.error_msg}")
+        self.trade_logger.error(message)
 
     def on_cancel_error(self, cancel_error):
         """

@@ -6,10 +6,12 @@ import pandas as pd
 from typing import Dict, Optional
 from dataclasses import dataclass
 import logging
+from decimal import Decimal
+from datetime import datetime
 
 from Settings import test_mode
 from dingding.XiaoHei import xiaohei
-from util import getNameFromCode, show, get_all_data, to_long_name
+from util import getNameFromCode, show, to_long_name
 
 logger = logging.getLogger(__name__)
 
@@ -31,6 +33,7 @@ class MyPos:
         self.init_flag = init_flag
         self.positions: Dict[str, Position] = {}
         self.total_asset: Optional[float] = None
+        self.trade_logger = logging.getLogger('trade')
 
     def refresh(self) -> None:
         """刷新持仓信息"""
@@ -55,6 +58,8 @@ class MyPos:
         positions = self.xt_trader.query_stock_positions(self.acc)
         _sum = 0
         prefix = ""
+        # 转债放后面了，区分一下
+        positions.sort(key=lambda x: (x.stock_code.startswith('12'), x.stock_code.startswith('11')))
         for i, pos in enumerate(positions):
             if pos.volume <= 0:
                 continue
@@ -73,25 +78,60 @@ class MyPos:
 
         xiaohei.send_text(f"{xiaoheiStr}\n{prefix}")
 
-    def buy(self, stock_code, count):
+    def log_trade(self, action: str, stock_code: str, count: int, price: float = None, status: str = "已提交") -> None:
+        """记录交易日志
+        
+        Args:
+            action: 交易动作（买入/卖出）
+            stock_code: 股票代码
+            count: 交易数量
+            price: 交易价格
+            status: 交易状态
+        """
+        try:
+            stock_name = getNameFromCode(stock_code)
+            price_str = f"价格:{price}" if price else "市价"
+            message = (f"{action} - 代码:{stock_code}({stock_name}) - "
+                      f"数量:{count} - {price_str} - 状态:{status}")
+            self.trade_logger.info(message)
+        except Exception as e:
+            logger.error(f"记录交易日志失败: {e}")
+
+    def buy(self, stock_code: str, count: int) -> None:
+        """买入股票"""
         if test_mode:
-            # 测试任务
+            self.log_trade("买入", stock_code, count, status="测试模式")
             return
 
-        self.xt_trader.order_stock_async(
-            self.acc, stock_code, xtconstant.STOCK_BUY, count, xtconstant.LATEST_PRICE, -1, 'my_strategy',
-            stock_code)
+        try:
+            self.xt_trader.order_stock_async(
+                self.acc, stock_code, xtconstant.STOCK_BUY, count, 
+                xtconstant.LATEST_PRICE, -1, 'my_strategy', stock_code
+            )
+            self.log_trade("买入", stock_code, count)
+        except Exception as e:
+            self.log_trade("买入", stock_code, count, status=f"失败-{str(e)}")
+            logger.error(f"买入失败: {e}")
+            raise
 
-    def sell(self, stock_code, count):
+    def sell(self, stock_code: str, count: int) -> None:
+        """卖出股票"""
         if test_mode:
-            # 测试任务
+            self.log_trade("卖出", stock_code, count, status="测试模式")
             return
 
-        if count < 0:
-            count = -count
-        self.xt_trader.order_stock_async(
-            self.acc, stock_code, xtconstant.STOCK_SELL, count, xtconstant.LATEST_PRICE, -1, 'my_strategy',
-            stock_code)
+        try:
+            if count < 0:
+                count = -count
+            self.xt_trader.order_stock_async(
+                self.acc, stock_code, xtconstant.STOCK_SELL, count,
+                xtconstant.LATEST_PRICE, -1, 'my_strategy', stock_code
+            )
+            self.log_trade("卖出", stock_code, count)
+        except Exception as e:
+            self.log_trade("卖出", stock_code, count, status=f"失败-{str(e)}")
+            logger.error(f"卖出失败: {e}")
+            raise
 
     def two_low_want(self, df):
         ##

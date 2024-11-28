@@ -8,6 +8,11 @@ from datechecker.checkDebt import check_debt
 from datechecker.DateChecker import registChecker
 from dingding.XiaoHei import xiaohei
 from util import today_is_trade_day
+from utils.power import init_power_settings
+from utils.log import setup_logging
+import logging
+
+logger = logging.getLogger(__name__)
 
 def daily_task():
     if not today_is_trade_day():
@@ -38,17 +43,30 @@ def good_morning():
     is_trade_day = today_is_trade_day()
     xiaohei.send_text(f"今天是否是交易日：{is_trade_day}")
 
+def health_reminders():
+    """健康提醒"""
+    import random
+    xiaohei.send_text("喝水提醒: 请记得多喝水!")
+    xiaohei.send_text(f"休息提醒: 每隔一小时请站起来活动一下!")
 
+
+# 初始化日志
+setup_logging()
+
+# 初始化电源设置
+init_power_settings()
+
+# 初始化交易对象
 my = MyPos(xt_trader, acc, init_flag)
 registChecker()
 
 if test_mode:
     good_morning()
     daily_task()
-
 else:
     schedule.every().day.at("08:35").do(good_morning)
-    schedule.every().day.at("13:20").do(daily_task)
+    schedule.every().day.at("13:17").do(daily_task)
+    schedule.every().hour.do(health_reminders)
 
     while True:
         schedule.run_pending()
