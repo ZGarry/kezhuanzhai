@@ -243,9 +243,53 @@ class Jisilu(BaseService):
         ret = js.json()
         bond_list = ret.get('rows', {})
         df = self.data_parse(bond_list, adjust_no_use)
-        # print(df)
-        # self.to_excel(df)
+
+        # 保存换手率数据，使用指定的日期
+        self.save_turnover_rates(df, self.date)
         return df
+
+    def save_turnover_rates(self, df, date_str):
+        """保存换手率数据
+        
+        Args:
+            df: 数据框
+            date_str: 日期字符串
+        """
+        try:
+            os.makedirs("data", exist_ok=True)
+            
+            turnover_data = df[['换手率']].copy()
+            turnover_data['date'] = date_str
+            
+            if os.path.exists(self.turnover_file):
+                turnover_data.to_csv(self.turnover_file, mode='a', header=False)
+            else:
+                turnover_data.to_csv(self.turnover_file)
+                
+            logger.info(f"成功保存{len(turnover_data)}条换手率数据，日期：{date_str}")
+            
+        except Exception as e:
+            error_msg = f"保存换手率数据失败: {e}"
+            logger.error(error_msg)
+
+    def get_session(self):
+        self.session = login(user, password)
+
+    def download(self, url, data, retry=5):
+
+        for i in range(retry):
+            try:
+                r = self.session.post(url, headers=self.headers, data=data)
+                if not r.text or r.status_code != 200:
+                    continue
+                else:
+                    return r
+            except Exception as e:
+                self.logger.info(e)
+                self.notify(title=f'下载失败 {self.__class__}')
+                continue
+
+        return None
 
     def identify_margin(self, x):
         if len(x) == 0:
@@ -346,6 +390,7 @@ class Jisilu(BaseService):
 
 
 def main():
+    """获取当天数据"""
     obj = Jisilu()
     obj.run()
 
