@@ -172,16 +172,28 @@ def login(user, password):
 
 # 爬取集思录 可转债的数据
 class Jisilu(BaseService):
-    def __init__(self):
+    def __init__(self, date_str=None):
+        """初始化集思录数据获取类
+        
+        Args:
+            date_str: 可选的日期字符串，格式为'%Y-%m-%d'，如果为None则使用当前日期
+        """
         super(Jisilu, self).__init__(logfile='jisilu.log')
 
-        self.date = datetime.datetime.now().strftime('%Y-%m-%d')
-        # self.date = '2020-02-07' # 用于调整时间
-        self.timestamp = int(time.time() * 1000)
+        if date_str:
+            self.date = date_str
+            # 将指定日期转换为timestamp
+            dt = datetime.datetime.strptime(date_str, '%Y-%m-%d')
+            self.timestamp = int(dt.timestamp() * 1000)
+        else:
+            self.date = datetime.datetime.now().strftime('%Y-%m-%d')
+            self.timestamp = int(time.time() * 1000)
+
         self.url = 'https://www.jisilu.cn/data/cbnew/cb_list_new/?___jsl=LST___t={}'.format(self.timestamp)
         self.pre_release_url = 'https://www.jisilu.cn/data/cbnew/pre_list/?___jsl=LST___t={}'.format(self.timestamp)
 
         self.get_session()
+        self.turnover_file = "data/turnover_rates.csv"
 
     @property
     def headers(self):
@@ -394,7 +406,34 @@ def main():
     obj = Jisilu()
     obj.run()
 
+def test_demo():
+    """测试获取历史数据"""
+    # 获取指定日期的数据
+    test_dates = [
+        '2024-01-18',
+        '2024-01-19',
+        '2024-01-20',
+    ]
+    
+    for date in test_dates:
+        try:
+            print(f"\n获取 {date} 的数据...")
+            obj = Jisilu(date)
+            df = obj.run()
+            
+            if df is not None:
+                print(f"成功获取数据，共 {len(df)} 条记录")
+                print("\n换手率前5名：")
+                print(df[['可转债名称', '换手率']].sort_values('换手率', ascending=False).head())
+            else:
+                print(f"获取 {date} 数据失败")
+                
+            time.sleep(1)  # 添加延时避免请求过快
+            
+        except Exception as e:
+            print(f"处理 {date} 数据时出错: {e}")
 
 if __name__ == '__main__':
-    main()
+    # main()  # 获取当天数据
+    test_demo()  # 运行测试demo
 
