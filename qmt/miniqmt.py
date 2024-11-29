@@ -10,6 +10,7 @@ from dingding.XiaoHei import xiaohei
 from util import today_is_trade_day
 from utils.power import init_power_settings
 from utils.log import setup_logging
+from jisilu.jisilu_data import Jisilu
 import logging
 
 logger = logging.getLogger(__name__)
@@ -45,10 +46,18 @@ def good_morning():
 
 def health_reminders():
     """健康提醒"""
-    import random
     xiaohei.send_text("喝水提醒: 请记得多喝水!")
     xiaohei.send_text(f"休息提醒: 每隔一小时请站起来活动一下!")
 
+def collect_turnover():
+    """收集当日换手率数据"""
+    if not today_is_trade_day():
+        logger.info("今日非交易日，跳过换手率数据采集")
+        return
+        
+    jsl = Jisilu()
+    df = jsl.run()
+       
 
 # 初始化日志
 setup_logging()
@@ -63,9 +72,11 @@ registChecker()
 if test_mode:
     good_morning()
     daily_task()
+    collect_turnover()  # 测试模式下直接执行
 else:
     schedule.every().day.at("08:35").do(good_morning)
     schedule.every().day.at("13:17").do(daily_task)
+    schedule.every().day.at("16:00").do(collect_turnover)  # 每天16:00采集换手率数据
     schedule.every().hour.do(health_reminders)
 
     while True:
