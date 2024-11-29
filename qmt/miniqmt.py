@@ -75,7 +75,7 @@ if test_mode:
     collect_turnover()  # 测试模式下直接执行
 else:
     schedule.every().day.at("08:35").do(good_morning)
-    schedule.every().day.at("13:17").do(daily_task)
+    schedule.every().day.at("14:44").do(daily_task)
     schedule.every().day.at("16:00").do(collect_turnover)  # 每天16:00采集换手率数据
     schedule.every().hour.do(health_reminders)
 

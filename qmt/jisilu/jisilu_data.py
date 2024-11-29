@@ -105,15 +105,68 @@ class Jisilu:
         # 转换为DataFrame
         df = pd.DataFrame([item['cell'] for item in data])
         
-        # 重命名列
-        rename_map = {
-            'bond_id': '可转债代码',
-            'bond_nm': '可转债名称',
-            'price': '可转债价格',
-            'turnover_rt': '换手率',
-            # 可以根据需要添加其他列
-        }
-        df = df.rename(columns=rename_map)
+        # 类型转换 部分含有%
+        df['price'] = df['price'].astype('float64')
+        df['convert_price'] = df['convert_price'].astype('float64')
+        df['premium_rt'] = df['premium_rt'].astype('float64')
+        df['force_redeem_price'] = df['force_redeem_price'].astype('float64')
+        rename_columns = {'bond_id': '可转债代码', 'bond_nm': '可转债名称',
+                            'price': '可转债价格', 'stock_nm': '正股名称',
+                            'stock_id': '正股代码',
+                            'sprice': '正股现价',
+                            'sincrease_rt': '正股涨跌幅',
+                            'convert_price': '最新转股价', 'premium_rt': '溢价率',
+                            'increase_rt': '可转债涨幅',
+                            'convert_value': '转股价值',
+                            'dblow': '双低',
+                            'put_convert_price': '回售触发价', 'convert_dt': '转股起始日',
+                            'maturity_dt': '到期时间',
+                            # 'short_maturity_dt': '到期时间',
+                            'volume': '成交额(万元)',
+                            'force_redeem_price': '强赎价格', 'year_left': '剩余时间',
+                            # 'next_put_dt': '回售起始日',
+                            'rating_cd': '评级',
+                            # 'issue_dt': '发行时间',
+                            # 'redeem_tc': '强制赎回条款',
+                            # 'adjust_tc': '下修条件',
+                            # 'adjust_condition': '下修条件',
+                            'turnover_rt': '换手率',
+                            'convert_price_tips': '下修提示',
+                            # 'put_tc': '回售',
+                            'adj_cnt': '提出下调次数',
+                            'svolume': '正股成交量',
+                            #   'ration':'已转股比例'
+                            'convert_amt_ratio': '转债剩余占总市值比',
+                            'curr_iss_amt': '剩余规模', 'orig_iss_amt': '发行规模',
+                            # 'ration_rt': '股东配售率',
+                            'option_tip': '期权价值',
+                            # 'bond_nm_tip': '强赎提示',
+                            'redeem_dt': '强赎日期',
+                            'list_dt': '上市日期',
+                            'ytm_rt': '到期收益率',
+                            # 'redeem_icon': '强赎标志',
+                            'icons': '标记',
+                            'margin_flg': '是否两融标的',
+
+                            'adj_scnt': '下修成功次数',
+                            'convert_cd_tip': '转股日期提示',
+                            'ref_yield_info': '参考YTM',
+                            # 'year_left':'剩余年限',
+                            # 'guarantor': '担保',
+                            }
+
+        df = df.rename(columns=rename_columns)
+        # df = df[list(rename_columns.values())]
+        df['更新日期'] = datetime.datetime.now().strftime('%Y-%m-%d %H:%M')
+        
+        
+        
+        # 抓取下网页上的数据校验下即可
+        # 打印前三个可转债的信息
+        top3 = df.head(3)
+        for _, row in top3.iterrows():
+            logger.info(f"可转债名称:{row['可转债名称']}, 价格:{row['可转债价格']:.2f}, "
+                       f"剩余时间:{row['剩余时间']:.2f}年, 换手率:{row['换手率']:.2f}%")
         
         # 设置索引
         df = df.set_index('可转债代码', drop=True)
@@ -190,5 +243,6 @@ def main():
     obj.run()
 
 if __name__ == '__main__':
-    test_demo()
+    # test_demo()
+    main()
 
