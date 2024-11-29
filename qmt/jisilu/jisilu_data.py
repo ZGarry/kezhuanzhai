@@ -125,13 +125,23 @@ class Jisilu:
         try:
             os.makedirs("data", exist_ok=True)
             
-            turnover_data = df[['换手率']].copy()
+            # 准备新数据
+            turnover_data = df.reset_index()
+            turnover_data = turnover_data[['可转债代码', '可转债名称', '换手率']].copy()
             turnover_data['date'] = self.date
             
+            # 读取已有数据(如果文件存在)
             if os.path.exists(self.turnover_file):
-                turnover_data.to_csv(self.turnover_file, mode='a', header=False)
-            else:
-                turnover_data.to_csv(self.turnover_file)
+                existing_data = pd.read_csv(self.turnover_file)
+                # 移除多余的列
+                existing_data = existing_data[['可转债代码', '可转债名称', '换手率', 'date']]
+                # 移除同一天的数据
+                existing_data = existing_data[existing_data['date'] != self.date]
+                # 合并新旧数据
+                turnover_data = pd.concat([existing_data, turnover_data], ignore_index=True)
+            
+            # 保存时不生成额外的索引列
+            turnover_data.to_csv(self.turnover_file, index=False)
                 
             logger.info(f"成功保存{len(turnover_data)}条换手率数据，日期：{self.date}")
             
@@ -180,5 +190,5 @@ def main():
     obj.run()
 
 if __name__ == '__main__':
-    main()
+    test_demo()
 
