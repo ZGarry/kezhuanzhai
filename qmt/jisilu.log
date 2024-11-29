@@ -1,0 +1,88 @@
+2024-11-29 12:19:51.077 | ERROR    | __main__:save_turnover_rates:373 - 保存换手率数据失败: module 'datetime' has no attribute 'now'
+2024-11-29 12:20:12.172 | INFO     | __main__:save_turnover_rates:369 - 成功保存528条换手率数据
+2024-11-29 12:28:51.746 | INFO     | __main__:batch_history:405 - 开始获取2024-11-29的数据
+2024-11-29 12:28:51.746 | INFO     | __main__:download:271 - exceptions must derive from BaseException
+2024-11-29 12:28:51.747 | INFO     | __main__:notify:113 - 可以执行发消息到自己的微信
+2024-11-29 12:28:51.747 | INFO     | __main__:notify:114 - 下载失败 <class '__main__.Jisilu'>
+2024-11-29 12:28:51.747 | INFO     | __main__:download:271 - exceptions must derive from BaseException
+2024-11-29 12:28:51.748 | INFO     | __main__:notify:113 - 可以执行发消息到自己的微信
+2024-11-29 12:28:51.748 | INFO     | __main__:notify:114 - 下载失败 <class '__main__.Jisilu'>
+2024-11-29 12:28:51.748 | INFO     | __main__:download:271 - exceptions must derive from BaseException
+2024-11-29 12:28:51.748 | INFO     | __main__:notify:113 - 可以执行发消息到自己的微信
+2024-11-29 12:28:51.749 | INFO     | __main__:notify:114 - 下载失败 <class '__main__.Jisilu'>
+2024-11-29 12:28:51.749 | INFO     | __main__:download:271 - exceptions must derive from BaseException
+2024-11-29 12:28:51.749 | INFO     | __main__:notify:113 - 可以执行发消息到自己的微信
+2024-11-29 12:28:51.749 | INFO     | __main__:notify:114 - 下载失败 <class '__main__.Jisilu'>
+2024-11-29 12:28:51.750 | INFO     | __main__:download:271 - exceptions must derive from BaseException
+2024-11-29 12:28:51.750 | INFO     | __main__:notify:113 - 可以执行发消息到自己的微信
+2024-11-29 12:28:51.750 | INFO     | __main__:notify:114 - 下载失败 <class '__main__.Jisilu'>
+2024-11-29 12:28:52.769 | INFO     | __main__:batch_history:405 - 开始获取2024-11-28的数据
+2024-11-29 12:28:52.770 | INFO     | __main__:download:271 - exceptions must derive from BaseException
+2024-11-29 12:28:52.771 | INFO     | __main__:notify:113 - 可以执行发消息到自己的微信
+2024-11-29 12:28:52.771 | INFO     | __main__:notify:114 - 下载失败 <class '__main__.Jisilu'>
+2024-11-29 12:28:52.771 | INFO     | __main__:download:271 - exceptions must derive from BaseException
+2024-11-29 12:28:52.771 | INFO     | __main__:notify:113 - 可以执行发消息到自己的微信
+2024-11-29 12:28:52.772 | INFO     | __main__:notify:114 - 下载失败 <class '__main__.Jisilu'>
+2024-11-29 12:28:52.772 | INFO     | __main__:download:271 - exceptions must derive from BaseException
+2024-11-29 12:28:52.772 | INFO     | __main__:notify:113 - 可以执行发消息到自己的微信
+2024-11-29 12:28:52.773 | INFO     | __main__:notify:114 - 下载失败 <class '__main__.Jisilu'>
+2024-11-29 12:28:52.773 | INFO     | __main__:download:271 - exceptions must derive from BaseException
+2024-11-29 12:28:52.774 | INFO     | __main__:notify:113 - 可以执行发消息到自己的微信
+2024-11-29 12:28:52.774 | INFO     | __main__:notify:114 - 下载失败 <class '__main__.Jisilu'>
+2024-11-29 12:28:52.774 | INFO     | __main__:download:271 - exceptions must derive from BaseException
+2024-11-29 12:28:52.774 | INFO     | __main__:notify:113 - 可以执行发消息到自己的微信
+2024-11-29 12:28:52.775 | INFO     | __main__:notify:114 - 下载失败 <class '__main__.Jisilu'>
+2024-11-29 12:28:53.782 | INFO     | __main__:batch_history:405 - 开始获取2024-11-27的数据
+2024-11-29 12:28:53.782 | INFO     | __main__:download:271 - exceptions must derive from BaseException
+2024-11-29 12:28:53.783 | INFO     | __main__:notify:113 - 可以执行发消息到自己的微信
+2024-11-29 12:28:53.783 | INFO     | __main__:notify:114 - 下载失败 <class '__main__.Jisilu'>
+2024-11-29 12:28:53.783 | INFO     | __main__:download:271 - exceptions must derive from BaseException
+2024-11-29 12:28:53.783 | INFO     | __main__:notify:113 - 可以执行发消息到自己的微信
+2024-11-29 12:28:53.784 | INFO     | __main__:notify:114 - 下载失败 <class '__main__.Jisilu'>
+2024-11-29 12:28:53.784 | INFO     | __main__:download:271 - exceptions must derive from BaseException
+2024-11-29 12:28:53.784 | INFO     | __main__:notify:113 - 可以执行发消息到自己的微信
+2024-11-29 12:28:53.784 | INFO     | __main__:notify:114 - 下载失败 <class '__main__.Jisilu'>
+2024-11-29 12:28:53.785 | INFO     | __main__:download:271 - exceptions must derive from BaseException
+2024-11-29 12:28:53.785 | INFO     | __main__:notify:113 - 可以执行发消息到自己的微信
+2024-11-29 12:28:53.785 | INFO     | __main__:notify:114 - 下载失败 <class '__main__.Jisilu'>
+2024-11-29 12:28:53.785 | INFO     | __main__:download:271 - exceptions must derive from BaseException
+2024-11-29 12:28:53.786 | INFO     | __main__:notify:113 - 可以执行发消息到自己的微信
+2024-11-29 12:28:53.786 | INFO     | __main__:notify:114 - 下载失败 <class '__main__.Jisilu'>
+2024-11-29 12:28:54.799 | INFO     | __main__:batch_history:405 - 开始获取2024-11-26的数据
+2024-11-29 12:28:54.799 | INFO     | __main__:download:271 - exceptions must derive from BaseException
+2024-11-29 12:28:54.800 | INFO     | __main__:notify:113 - 可以执行发消息到自己的微信
+2024-11-29 12:28:54.800 | INFO     | __main__:notify:114 - 下载失败 <class '__main__.Jisilu'>
+2024-11-29 12:28:54.800 | INFO     | __main__:download:271 - exceptions must derive from BaseException
+2024-11-29 12:28:54.800 | INFO     | __main__:notify:113 - 可以执行发消息到自己的微信
+2024-11-29 12:28:54.801 | INFO     | __main__:notify:114 - 下载失败 <class '__main__.Jisilu'>
+2024-11-29 12:28:54.801 | INFO     | __main__:download:271 - exceptions must derive from BaseException
+2024-11-29 12:28:54.801 | INFO     | __main__:notify:113 - 可以执行发消息到自己的微信
+2024-11-29 12:28:54.801 | INFO     | __main__:notify:114 - 下载失败 <class '__main__.Jisilu'>
+2024-11-29 12:28:54.801 | INFO     | __main__:download:271 - exceptions must derive from BaseException
+2024-11-29 12:28:54.802 | INFO     | __main__:notify:113 - 可以执行发消息到自己的微信
+2024-11-29 12:28:54.802 | INFO     | __main__:notify:114 - 下载失败 <class '__main__.Jisilu'>
+2024-11-29 12:28:54.802 | INFO     | __main__:download:271 - exceptions must derive from BaseException
+2024-11-29 12:28:54.803 | INFO     | __main__:notify:113 - 可以执行发消息到自己的微信
+2024-11-29 12:28:54.803 | INFO     | __main__:notify:114 - 下载失败 <class '__main__.Jisilu'>
+2024-11-29 12:28:55.806 | INFO     | __main__:batch_history:405 - 开始获取2024-11-25的数据
+2024-11-29 12:28:55.806 | INFO     | __main__:download:271 - exceptions must derive from BaseException
+2024-11-29 12:28:55.807 | INFO     | __main__:notify:113 - 可以执行发消息到自己的微信
+2024-11-29 12:28:55.807 | INFO     | __main__:notify:114 - 下载失败 <class '__main__.Jisilu'>
+2024-11-29 12:28:55.807 | INFO     | __main__:download:271 - exceptions must derive from BaseException
+2024-11-29 12:28:55.807 | INFO     | __main__:notify:113 - 可以执行发消息到自己的微信
+2024-11-29 12:28:55.808 | INFO     | __main__:notify:114 - 下载失败 <class '__main__.Jisilu'>
+2024-11-29 12:28:55.808 | INFO     | __main__:download:271 - exceptions must derive from BaseException
+2024-11-29 12:28:55.808 | INFO     | __main__:notify:113 - 可以执行发消息到自己的微信
+2024-11-29 12:28:55.808 | INFO     | __main__:notify:114 - 下载失败 <class '__main__.Jisilu'>
+2024-11-29 12:28:55.809 | INFO     | __main__:download:271 - exceptions must derive from BaseException
+2024-11-29 12:28:55.809 | INFO     | __main__:notify:113 - 可以执行发消息到自己的微信
+2024-11-29 12:28:55.809 | INFO     | __main__:notify:114 - 下载失败 <class '__main__.Jisilu'>
+2024-11-29 12:28:55.809 | INFO     | __main__:download:271 - exceptions must derive from BaseException
+2024-11-29 12:28:55.809 | INFO     | __main__:notify:113 - 可以执行发消息到自己的微信
+2024-11-29 12:28:55.810 | INFO     | __main__:notify:114 - 下载失败 <class '__main__.Jisilu'>
+2024-11-29 12:45:45.485 | INFO     | __main__:save_turnover_rates:281 - 成功保存528条换手率数据，日期：2024-01-18
+2024-11-29 12:45:48.867 | INFO     | __main__:save_turnover_rates:281 - 成功保存528条换手率数据，日期：2024-01-19
+2024-11-29 12:45:48.867 | INFO     | __main__:save_turnover_rates:281 - 成功保存528条换手率数据，日期：2024-01-19
+2024-11-29 12:45:51.870 | INFO     | __main__:save_turnover_rates:281 - 成功保存528条换手率数据，日期：2024-01-20
+2024-11-29 12:45:51.870 | INFO     | __main__:save_turnover_rates:281 - 成功保存528条换手率数据，日期：2024-01-20
+2024-11-29 12:45:51.870 | INFO     | __main__:save_turnover_rates:281 - 成功保存528条换手率数据，日期：2024-01-20

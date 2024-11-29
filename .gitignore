@@ -4,3 +4,6 @@
 __pycache__
 .ipynotebook_checkpoints
 .\__pycache__
+qmt/__pycache__ 
+qmt/.idea
+qmt/.cache
