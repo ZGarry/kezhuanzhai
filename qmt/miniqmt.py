@@ -9,7 +9,7 @@ from datechecker.DateChecker import registChecker
 from dingding.XiaoHei import xiaohei
 from data_util import today_is_trade_day
 from util.power import init_power_settings
-from util.log import setup_logging
+from util.log_util import setup_logging
 from jisilu.jisilu_data import Jisilu
 import logging
 
