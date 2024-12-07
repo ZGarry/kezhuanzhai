@@ -71,7 +71,7 @@ class StrategyExecutor:
         
         # 过滤非可转债代码
         for key in list(diff_dict.keys()):
-            if not key.startswith(('12', '11')) or '110092' or '123099' in key:
+            if not key.startswith(('12', '11')):
                 diff_dict[key] = 0
                 
         # 执行交易
