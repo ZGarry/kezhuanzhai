@@ -4,6 +4,7 @@ from trading.executor import TradeExecutor
 from strategy.two_low import TwoLowStrategy
 from strategy.reverse_repo import ReverseRepoStrategy
 from reporter import PositionReporter
+from trading.strategy_executor import StrategyExecutor
 
 class MyPos:
     """交易管理类"""
@@ -14,9 +15,10 @@ class MyPos:
         self.position_manager = PositionManager(xt_trader, acc)
         self.trade_executor = TradeExecutor(xt_trader, acc)
         self.reporter = PositionReporter(self.position_manager)
+        self.strategy_executor = StrategyExecutor(self.position_manager, self.trade_executor)
         
         # 初始化策略
-        self.two_low_strategy = TwoLowStrategy(self.position_manager, self.trade_executor)
+        self.two_low_strategy = TwoLowStrategy()
         self.reverse_repo_strategy = ReverseRepoStrategy(self.position_manager, self.trade_executor)
         
     def showMyPos(self) -> None:
@@ -25,7 +27,7 @@ class MyPos:
         
     def two_low(self) -> None:
         """执行双低策略"""
-        self.two_low_strategy.execute()
+        self.strategy_executor.execute_strategy(self.two_low_strategy)
         
     def buy_ni_hui_gou(self) -> None:
         """执行逆回购策略"""

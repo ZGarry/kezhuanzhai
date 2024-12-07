@@ -2,6 +2,7 @@ from functools import cache
 import akshare as ak
 import pandas as pd
 from diskcache import Cache
+from Settings import test_mode
 
 cache_dir = './.cache'
 cache = Cache(cache_dir)
@@ -85,6 +86,10 @@ def get_trade_date_hist_sina(year):
 
 
 def today_is_trade_day():
+    # 测试模式下每天都是交易日
+    if test_mode:
+        return True
+
     # 获取今天年
     from datetime import datetime
     current_datetime = datetime.now()

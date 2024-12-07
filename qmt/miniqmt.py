@@ -16,6 +16,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 def daily_task():
+
     if not today_is_trade_day():
         xiaohei.send_text(f"今天非交易日，不进行交易")
         return
