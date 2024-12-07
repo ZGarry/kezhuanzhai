@@ -26,7 +26,7 @@ class Jisilu:
             
         # 设置URL和文件路径
         self.url = f'https://www.jisilu.cn/data/cbnew/cb_list_new/?___jsl=LST___t={self.timestamp}'
-        self.turnover_file = "data/turnover_rates.csv"
+        self.turnover_file = "../data/turnover_rates.csv"
         
         # 登录集思录
         self.session = self._login()
@@ -152,7 +152,7 @@ class Jisilu:
                             'convert_cd_tip': '转股日期提示',
                             'ref_yield_info': '参考YTM',
                             # 'year_left':'剩余年限',
-                            # 'guarantor': '担保',
+                            # 'guarantor': '��保',
                             }
 
         df = df.rename(columns=rename_columns)
@@ -213,16 +213,15 @@ class Jisilu:
 
 
 def test_demo():
-    """测试获取历史数据"""
-    from datetime import datetime, timedelta
+    from data_util import get_last_n_trade_days
+    # 获取过去5个交易日
+    trade_dates = get_last_n_trade_days(5)
     
-    today = datetime.now()
-    test_dates = [(today - timedelta(days=i)).strftime('%Y-%m-%d') for i in range(5)]
-    
-    for date in test_dates:
+    for date in trade_dates:
         try:
-            print(f"\n获取 {date} 的数据...")
-            obj = Jisilu(date)
+            date_str = date.strftime('%Y-%m-%d')
+            print(f"\n获取 {date_str} 的数据...")
+            obj = Jisilu(date_str)
             df = obj.run()
             
             if df is not None:
@@ -230,19 +229,20 @@ def test_demo():
                 print("\n换手率前5名：")
                 print(df[['可转债名称', '换手率']].sort_values('换手率', ascending=False).head())
             else:
-                print(f"获取 {date} 数据失败")
+                print(f"获取 {date_str} 数据失败")
                 
             time.sleep(1)  # 避免请求过快
             
         except Exception as e:
-            print(f"处理 {date} 数据时出错: {e}")
+            print(f"处理 {date_str} 数据时出错: {e}")
 
 def main():
     """获取当天数据"""
     obj = Jisilu()
     obj.run()
 
+# python 的路径处理比想象中要复杂
 if __name__ == '__main__':
-    # test_demo()
-    main()
+    test_demo()
+    # main()
 

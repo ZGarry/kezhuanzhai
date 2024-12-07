@@ -1,7 +1,7 @@
 from typing import Dict
 import logging
 from strategy.base import Strategy
-from util import to_long_name, getNameFromCode
+from data_util import to_long_name, getNameFromCode
 from dingding.XiaoHei import xiaohei
 import pandas as pd
 

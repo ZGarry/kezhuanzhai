@@ -9,6 +9,7 @@ cache = Cache(cache_dir)
 @cache.memoize()
 def get_bond_info(date_str):
     print(1)
+    # 速度突然下滑，变慢，可能可能是网络问题，akshare其他的接口也变慢了(重新启动后oK)
     return ak.bond_zh_cov()
 
 @cache.memoize()
@@ -100,3 +101,31 @@ def today_is_trade_day():
         return True
     else:
         return False
+
+def get_last_n_trade_days(n=5):
+    """获取过去n个交易日（如果今天是交易日，则包含今天）
+    
+    Args:
+        n: 需要获取的交易日数量，默认为5
+        
+    Returns:
+        list: 包含n个交易日的列表，格式为datetime.date对象
+    """
+    from datetime import datetime, timedelta
+    
+    current_datetime = datetime.now()
+    current_year = current_datetime.year
+    
+    # 获取今年的交易日历
+    df = get_trade_date_hist_sina(current_year)
+    trade_dates = pd.to_datetime(df['trade_date']).dt.date.sort_values(ascending=False)
+    
+    # 获取今天的日期
+    today = current_datetime.date()
+    
+    if today in trade_dates.values:
+        # 如果今天是交易日，直接获取包含今天在内的n个交易日
+        return trade_dates[trade_dates <= today].head(n).tolist()
+    else:
+        # 如果今天不是交易日，获取小于今天的n个交易日
+        return trade_dates[trade_dates < today].head(n).tolist()

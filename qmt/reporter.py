@@ -1,7 +1,7 @@
 from typing import Dict
 import logging
 from trading.position import PositionManager
-from util import getNameFromCode, show
+from data_util import getNameFromCode, show
 from dingding.XiaoHei import xiaohei
 
 logger = logging.getLogger(__name__)

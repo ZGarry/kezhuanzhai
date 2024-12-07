@@ -4,7 +4,7 @@ from xtquant import xtconstant
 from xtquant.xttrader import XtQuantTrader
 from xtquant.xttype import StockAccount
 from Settings import test_mode
-from util import getNameFromCode
+from data_util import getNameFromCode
 
 logger = logging.getLogger(__name__)
 
