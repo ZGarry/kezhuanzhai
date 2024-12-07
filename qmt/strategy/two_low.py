@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 class TwoLowStrategy(Strategy):
     """双低策略"""
     def two_low_want(self, df) -> Dict[str, int]:
-        needUseMoney = 200000
+        needUseMoney = 300000
         wantPos = {}
         my = list(df[:10].iterrows())
         
@@ -58,7 +58,7 @@ class TwoLowStrategy(Strategy):
         # 过滤和排序
         diff_dict = dict(sorted(diff_dict.items(), key=lambda item: item[1]))
         for key in list(diff_dict.keys()):
-            if not key.startswith(('12', '11')) or '110092' in key:
+            if not key.startswith(('12', '11')) or '110092' or '123099' in key:
                 diff_dict[key] = 0
                 
         # 执行交易

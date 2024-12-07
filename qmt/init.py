@@ -46,8 +46,9 @@ def init():
         raise Exception("交易回调订阅失败，程序终止")
 
 
-try:
-    init()
-    init_flag = True
-except:
-    print("软件尚未启动或找不到位置")
+init()
+init_flag = True
+# try:
+    
+# except:
+#     print("软件尚未启动或找不到位置")

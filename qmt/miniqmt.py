@@ -28,6 +28,11 @@ def daily_task():
     if init_flag:
         my.two_low()
 
+def buy_reverse_repo():
+    """执行逆回购交易"""
+    if not today_is_trade_day():
+        return
+        
     # 买逆回购，剩下的资金买逆回购
     if init_flag:
         my.buy_ni_hui_gou()
@@ -72,11 +77,13 @@ registChecker()
 if test_mode:
     good_morning()
     daily_task()
+    buy_reverse_repo()
     collect_turnover()  # 测试模式下直接执行
 else:
     schedule.every().day.at("08:35").do(good_morning)
     schedule.every().day.at("14:44").do(daily_task)
-    schedule.every().day.at("16:00").do(collect_turnover)  # 每天16:00采集换手率数据
+    schedule.every().day.at("14:50").do(buy_reverse_repo)  # 新增：每天14:50执行逆回购
+    schedule.every().day.at("16:00").do(collect_turnover)
     schedule.every().hour.do(health_reminders)
 
     while True:
