@@ -32,7 +32,7 @@ class PositionReporter:
                 prefix += f"{i + 1}.{getNameFromCode(code)}持有{pos.volume}股\n"
                 
             asset = self.position_manager.xt_trader.query_stock_asset(self.position_manager.acc)
-            msg = (f"总金额:{show(_sum)},现金:{show(asset.cash)},"
+            msg = (f"总金额（不包含港股）:{show(asset.cash + asset.market_value)},现金:{show(asset.cash)},"
                   f"股票持仓:{show(asset.market_value)}\n{prefix}")
             
             xiaohei.send_text(msg)
