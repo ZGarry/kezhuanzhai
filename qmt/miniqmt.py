@@ -8,8 +8,8 @@ from datechecker.checkDebt import check_debt
 from datechecker.DateChecker import registChecker
 from dingding.XiaoHei import xiaohei
 from util import today_is_trade_day
-from utils.power import init_power_settings
-from utils.log import setup_logging
+from util.power import init_power_settings
+from util.log import setup_logging
 from jisilu.jisilu_data import Jisilu
 import logging
 
