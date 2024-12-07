@@ -3,6 +3,8 @@ import pandas as pd
 from data_util import to_long_name, getNameFromCode
 from dingding.XiaoHei import xiaohei
 import logging
+import os
+import datetime
 
 logger = logging.getLogger(__name__)
 
@@ -45,6 +47,9 @@ class StrategyExecutor:
             logger.error("获取集思录数据失败")
             return
             
+        # 合并换手率数据
+        data = self.merge_turnover_data(data)
+        
         # 应用策略的筛选和评分
         scored_data = strategy.filter_and_score(data)
         
@@ -84,3 +89,54 @@ class StrategyExecutor:
                 trade_msg += f"卖出{getNameFromCode(key)} {-diff}股\n"
                 
         return trade_msg 
+    
+    def merge_turnover_data(self, current_data: pd.DataFrame) -> pd.DataFrame:
+        """合并当日和历史换手率数据"""
+        try:
+            # 读取历史换手率数据
+            turnover_file = r"D:\my\kezhuanzhai\qmt\data\turnover_rates.csv"
+            if not os.path.exists(turnover_file):
+                logger.warning("找不到历史换手率数据文件")
+                return current_data
+            
+            # 读取历史数据
+            hist_data = pd.read_csv(turnover_file)
+            
+            from data_util import get_last_n_trade_days, today_is_trade_day
+            
+            # 根据是否为交易日获取不同天数的历史数据
+            if today_is_trade_day():
+                recent_dates = get_last_n_trade_days(5)  # 获取过去4个交易日
+                recent_dates = recent_dates[:-1]
+            else:
+                recent_dates = get_last_n_trade_days(5)  # 获取过去5个交易日
+                
+            recent_dates = [d.strftime('%Y-%m-%d') for d in recent_dates]
+            
+            # 检查每个日期是否都存在于历史数据中
+            for date in recent_dates:
+                if date not in hist_data['date'].values:
+                    raise ValueError(f"历史数据中缺少日期 {date} 的数据")
+            
+            # 筛选历史数据
+            hist_data = hist_data[hist_data['date'].isin(recent_dates)]
+            
+            # 数据透视表得到每个转债的历史换手率
+            pivot_data = hist_data.pivot(index='可转债代码', columns='date', values='换手率')
+            
+            # 如果是交易日，添加当日数据
+            if today_is_trade_day():
+                current_turnover = current_data['换手率'].copy()
+                pivot_data['current'] = current_turnover
+            
+            # 计算5日平均换手率
+            pivot_data['五日平均换手率'] = pivot_data.mean(axis=1)
+            
+            # 合并回原始数据
+            current_data['五日平均换手率'] = pivot_data['五日平均换手率']
+            
+            return current_data
+            
+        except Exception as e:
+            logger.error(f"合并换手率数据失败: {e}")
+            return current_data

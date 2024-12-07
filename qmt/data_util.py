@@ -116,21 +116,21 @@ def get_last_n_trade_days(n=5):
     Returns:
         list: 包含n个交易日的列表，格式为datetime.date对象
     """
-    from datetime import datetime, timedelta
+    from datetime import datetime
     
     current_datetime = datetime.now()
     current_year = current_datetime.year
     
     # 获取今年的交易日历
     df = get_trade_date_hist_sina(current_year)
-    trade_dates = pd.to_datetime(df['trade_date']).dt.date.sort_values(ascending=False)
+    trade_dates = pd.to_datetime(df['trade_date']).dt.date.sort_values(ascending=True)
     
-    # 获取今天的日期
+    # 获取今天的日期上
     today = current_datetime.date()
     
     if today in trade_dates.values:
         # 如果今天是交易日，直接获取包含今天在内的n个交易日
-        return trade_dates[trade_dates <= today].head(n).tolist()
+        return trade_dates[trade_dates <= today].tail(n).tolist()
     else:
         # 如果今天不是交易日，获取小于今天的n个交易日
-        return trade_dates[trade_dates < today].head(n).tolist()
+        return trade_dates[trade_dates < today].tail(n).tolist()

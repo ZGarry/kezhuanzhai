@@ -6,6 +6,7 @@ import execjs
 import os
 import requests
 
+# 此处的数据查询不到每天的，只能查询到当天的
 class Jisilu:
     """集思录数据获取类"""
     
@@ -26,7 +27,7 @@ class Jisilu:
             
         # 设置URL和文件路径
         self.url = f'https://www.jisilu.cn/data/cbnew/cb_list_new/?___jsl=LST___t={self.timestamp}'
-        self.turnover_file = "../data/turnover_rates.csv"
+        self.turnover_file = r"D:\my\kezhuanzhai\qmt\data\turnover_rates.csv"
         
         # 登录集思录
         self.session = self._login()
