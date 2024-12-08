@@ -6,6 +6,10 @@ from strategy.turnover import TurnoverStrategy
 from strategy.reverse_repo import ReverseRepoStrategy
 from reporter import PositionReporter
 from trading.strategy_executor import StrategyExecutor
+from strategy.composite import CompositeStrategy
+from strategy.scorers.composite_scorer import CompositeScorer
+from strategy.scorers.double_low_scorer import DoubleLowScorer
+from strategy.scorers.turnover_scorer import TurnoverScorer
 
 class MyPos:
     """交易管理类"""
@@ -18,10 +22,16 @@ class MyPos:
         self.reporter = PositionReporter(self.position_manager)
         self.strategy_executor = StrategyExecutor(self.position_manager, self.trade_executor)
         
+        # 初始化评分器
+        self.double_low_scorer = DoubleLowScorer()
+        self.turnover_scorer = TurnoverScorer()
+        self.composite_scorer = CompositeScorer()
+        
         # 初始化策略
         self.two_low_strategy = TwoLowStrategy()
         self.turnover_strategy = TurnoverStrategy()
         self.reverse_repo_strategy = ReverseRepoStrategy(self.position_manager, self.trade_executor)
+        self.composite_strategy = CompositeStrategy()
         
     def showMyPos(self) -> None:
         """显示当前持仓"""
@@ -38,3 +48,7 @@ class MyPos:
     def buy_ni_hui_gou(self) -> None:
         """执行逆回购策略"""
         self.reverse_repo_strategy.execute()
+        
+    def composite(self) -> None:
+        """执行复合策略"""
+        self.strategy_executor.execute_strategy(self.composite_strategy)

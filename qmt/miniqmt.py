@@ -28,6 +28,7 @@ def daily_task():
     # 跑策略
     if init_flag:
         my.two_low()
+        # my.composite()
 
 def buy_reverse_repo():
     """执行逆回购交易"""

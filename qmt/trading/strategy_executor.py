@@ -4,7 +4,6 @@ from data_util import to_long_name, getNameFromCode
 from dingding.XiaoHei import xiaohei
 import logging
 import os
-import datetime
 
 logger = logging.getLogger(__name__)
 
@@ -76,7 +75,7 @@ class StrategyExecutor:
         
         # 过滤非可转债代码
         for key in list(diff_dict.keys()):
-            if not key.startswith(('12', '11')):
+            if not key.startswith(('12', '11')) or '110092' in key:
                 diff_dict[key] = 0
                 
         # 执行交易
@@ -123,7 +122,12 @@ class StrategyExecutor:
             
             # 数据透视表得到每个转债的历史换手率
             pivot_data = hist_data.pivot(index='可转债代码', columns='date', values='换手率')
-            
+
+            # 合并回原始数据（新增了一个五日平均换手率数据）
+            # 确保索引类型一致
+            pivot_data.index = pivot_data.index.astype(str)
+            current_data.index = current_data.index.astype(str)
+
             # 如果是交易日，添加当日数据
             if today_is_trade_day():
                 current_turnover = current_data['换手率'].copy()
@@ -131,9 +135,9 @@ class StrategyExecutor:
             
             # 计算5日平均换手率
             pivot_data['五日平均换手率'] = pivot_data.mean(axis=1)
-            
-            # 合并回原始数据（新增了一个五日平均换手率数据）
-            current_data['五日平均换手率'] = pivot_data['五日平均换手率']
+
+            # 使用map方法合并数据
+            current_data['五日平均换手率'] = current_data.index.map(pivot_data['五日平均换手率'])
             
             return current_data
             
