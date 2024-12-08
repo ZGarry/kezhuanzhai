@@ -132,7 +132,7 @@ class StrategyExecutor:
             # 计算5日平均换手率
             pivot_data['五日平均换手率'] = pivot_data.mean(axis=1)
             
-            # 合并回原始数据
+            # 合并回原始数据（新增了一个五日平均换手率数据）
             current_data['五日平均换手率'] = pivot_data['五日平均换手率']
             
             return current_data
