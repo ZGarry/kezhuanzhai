@@ -21,6 +21,8 @@ class TradeExecutor:
         try:
             stock_name = getNameFromCode(stock_code)
             price_str = f"价格:{price}" if price else "市价"
+            if status == "测试模式":
+                action = f"[测试模式]{action}"
             message = (f"{action} - 代码:{stock_code}({stock_name}) - "
                       f"数量:{count} - {price_str} - 状态:{status}")
             self.trade_logger.info(message)

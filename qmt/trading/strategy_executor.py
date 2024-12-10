@@ -4,7 +4,7 @@ from data_util import to_long_name, getNameFromCode
 from dingding.XiaoHei import xiaohei
 import logging
 import os
-
+from Settings import test_mode
 logger = logging.getLogger(__name__)
 
 class Strategy(Protocol):
@@ -71,23 +71,37 @@ class StrategyExecutor:
             
     def _execute_trades(self, diff_dict: Dict[str, int]) -> str:
         """执行交易并返回消息文本"""
-        trade_msg = ""
+        buy_msgs = []
+        sell_msgs = []
         
         # 过滤非可转债代码
         for key in list(diff_dict.keys()):
             if not key.startswith(('12', '11')) or '110092' in key:
                 diff_dict[key] = 0
                 
-        # 执行交易
+        # 执行交易并分类消息
         for key, diff in diff_dict.items():
             if diff > 0:
                 self.trade_executor.buy(key, diff)
-                trade_msg += f"买入{getNameFromCode(key)} {diff}股\n"
+                buy_msgs.append(f"{getNameFromCode(key):<8} +{diff:>4}股")
             elif diff < 0:
                 self.trade_executor.sell(key, -diff)
-                trade_msg += f"卖出{getNameFromCode(key)} {-diff}股\n"
-                
-        return trade_msg 
+                sell_msgs.append(f"{getNameFromCode(key):<8} {diff:>5}股")  # diff已经是负数
+        
+        # 组装最终消息
+        msg = []
+        if test_mode:
+            msg.append("【测试模式】")
+        
+        if sell_msgs:
+            msg.append("==== 卖出委托 ====")
+            msg.extend(sell_msgs)
+        
+        if buy_msgs:
+            msg.append("==== 买入委托 ====")
+            msg.extend(buy_msgs)
+            
+        return "\n".join(msg) if msg else ""
     
     def merge_turnover_data(self, current_data: pd.DataFrame) -> pd.DataFrame:
         """合并当日和历史换手率数据"""

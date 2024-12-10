@@ -17,26 +17,43 @@ class PositionReporter:
             self.position_manager.refresh()
             positions = self.position_manager.get_all_positions()
             
-            _sum = sum(pos.market_value for pos in positions.values())
-            prefix = ""
+            # 分离股票和转债
+            stock_positions = []
+            bond_positions = []
             
-            # 按代码排序（转债放后面）
-            sorted_positions = sorted(
-                positions.items(), 
-                key=lambda x: (x[0].startswith('12'), x[0].startswith('11'))
-            )
-            
-            for i, (code, pos) in enumerate(sorted_positions):
+            for code, pos in positions.items():
                 if pos.volume <= 0:
                     continue
-                prefix += f"{i + 1}.{getNameFromCode(code)}持有{pos.volume}股\n"
-                
-            asset = self.position_manager.xt_trader.query_stock_asset(self.position_manager.acc)
-            msg = (f"总金额（不包含港股）:{show(asset.cash + asset.market_value)},现金:{show(asset.cash)},"
-                  f"股票持仓:{show(asset.market_value)}\n{prefix}")
+                if code.startswith(('11', '12')):
+                    bond_positions.append((code, pos))
+                else:
+                    stock_positions.append((code, pos))
             
-            xiaohei.send_text(msg)
+            # 生成报告文本
+            msg = []
+            asset = self.position_manager.xt_trader.query_stock_asset(self.position_manager.acc)
+            
+            # 资产概览
+            msg.append("==== 资产概览(不含港股) ====")
+            msg.append(f"总金额: {show(asset.cash + asset.market_value)}")
+            msg.append(f"现金: {show(asset.cash)}")
+            msg.append(f"持仓市值: {show(asset.market_value)}")
+            
+            # 股票持仓
+            if stock_positions:
+                msg.append("==== 股票持仓 ====")
+                for i, (code, pos) in enumerate(stock_positions, 1):
+                    msg.append(f"{i}. {getNameFromCode(code):<8} {pos.volume:>6}股")
+            
+            # 转债持仓
+            if bond_positions:
+                msg.append("==== 转债持仓 ====")
+                for i, (code, pos) in enumerate(bond_positions, 1):
+                    msg.append(f"{i}. {getNameFromCode(code):<8} {pos.volume:>6}股")
+            
+            # 发送消息
+            xiaohei.send_text("\n".join(msg))
             
         except Exception as e:
             logger.error(f"生成持仓报告失败: {e}")
-            raise 
+            raise

@@ -49,11 +49,10 @@ def good_morning():
 
     # 今天是否是交易日
     is_trade_day = today_is_trade_day()
-    xiaohei.send_text(f"今天是否是交易日：{is_trade_day}")
+    # xiaohei.send_text(f"今天是否是交易日：{is_trade_day}")
 
 def health_reminders():
     """健康提醒"""
-    xiaohei.send_text("喝水提醒: 请记得多喝水!")
     xiaohei.send_text(f"休息提醒: 每隔一小时请站起来活动一下!")
 
 def collect_turnover():
