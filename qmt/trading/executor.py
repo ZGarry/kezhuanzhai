@@ -1,19 +1,16 @@
+from loguru import logger
 from typing import Optional
-import logging
 from xtquant import xtconstant
 from xtquant.xttrader import XtQuantTrader
 from xtquant.xttype import StockAccount
 from Settings import test_mode
 from data_util import getNameFromCode
 
-logger = logging.getLogger(__name__)
-
 class TradeExecutor:
     """交易执行器"""
     def __init__(self, xt_trader: XtQuantTrader, acc: StockAccount):
         self.xt_trader = xt_trader
         self.acc = acc
-        self.trade_logger = logging.getLogger('trade')
         
     def log_trade(self, action: str, stock_code: str, count: int, 
                   price: float = None, status: str = "已提交") -> None:
@@ -25,9 +22,9 @@ class TradeExecutor:
                 action = f"[测试模式]{action}"
             message = (f"{action} - 代码:{stock_code}({stock_name}) - "
                       f"数量:{count} - {price_str} - 状态:{status}")
-            self.trade_logger.info(message)
+            logger.info(message)
         except Exception as e:
-            logger.error(f"记录交易日志失败: {e}")
+            logger.exception(f"记录交易日志失败")
             
     def buy(self, stock_code: str, count: int) -> None:
         """买入股票"""

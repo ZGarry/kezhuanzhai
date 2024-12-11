@@ -1,3 +1,10 @@
+import logging
+from Settings import test_mode
+from data_util import show
+from dingding.XiaoHei import xiaohei
+
+logger = logging.getLogger(__name__)
+
 class ReverseRepoStrategy:
     """逆回购策略"""
     def __init__(self, position_manager, trade_executor):

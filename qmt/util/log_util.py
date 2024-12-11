@@ -1,6 +1,6 @@
+from loguru import logger
+import sys
 import os
-import logging
-import logging.handlers
 
 def setup_logging():
     """配置日志设置"""
@@ -8,23 +8,21 @@ def setup_logging():
     if not os.path.exists('logs'):
         os.makedirs('logs')
         
-    # 配置根日志记录器
-    logging.basicConfig(level=logging.INFO,
-                       format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    # 移除默认的sink
+    logger.remove()
     
-    # 创建交易日志记录器
-    trade_logger = logging.getLogger('trade')
-    trade_logger.setLevel(logging.INFO)
+    # 添加控制台输出
+    logger.add(
+        sys.stderr,
+        format="<green>{time:YYYY-MM-DD HH:mm:ss}</green> | <level>{level: <8}</level> | <cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> - <level>{message}</level>",
+        level="INFO"
+    )
     
-    # 创建按天轮转的文件处理器
-    trade_handler = logging.handlers.TimedRotatingFileHandler(
-        'logs/trade.log',
-        when='midnight',
-        interval=1,
-        backupCount=30,
+    # 添加文件输出
+    logger.add(
+        "logs/trade.log",
+        rotation="00:00",  # 每天午夜切换文件
+        retention="30 days",  # 保留30天的日志
+        format="{time:YYYY-MM-DD HH:mm:ss} | {level: <8} | {message}",
         encoding='utf-8'
     )
-    trade_handler.setFormatter(logging.Formatter(
-        '%(asctime)s - %(levelname)s - %(message)s'
-    ))
-    trade_logger.addHandler(trade_handler) 
