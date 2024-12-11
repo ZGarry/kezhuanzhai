@@ -6,11 +6,27 @@ class ReverseRepoStrategy:
         
     def execute(self) -> None:
         """执行逆回购策略"""
-        asset = self.position_manager.xt_trader.query_stock_asset(self.position_manager.acc)
-        need_buy = asset.cash - 1000
-        
-        if need_buy < 1000:
-            return
+        try:
+            asset = self.position_manager.xt_trader.query_stock_asset(self.position_manager.acc)
+            need_buy = asset.cash - 1000
             
-        # 买入深市所有逆回购
-        self.trade_executor.sell('204001.SH', int(int(need_buy / 100) / 10) * 10)
+            if need_buy < 1000:
+                return
+                
+            # 买入深市所有逆回购
+            amount = int(int(need_buy / 100) / 10) * 10
+            self.trade_executor.sell('204001.SH', amount)
+            
+            # 发送通知
+            msg = []
+            if test_mode:
+                msg.append("【测试模式】")
+            msg.append("==== 逆回购委托 ====")
+            msg.append(f"GC001    {amount:>5}股")
+            msg.append(f"剩余现金: {show(asset.cash - amount * 100)}")
+            
+            xiaohei.send_text("\n".join(msg))
+            
+        except Exception as e:
+            logger.error(f"执行逆回购策略失败: {e}")
+            raise
