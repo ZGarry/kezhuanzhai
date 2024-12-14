@@ -9,7 +9,7 @@ from datechecker.checkDebt import check_debt
 from datechecker.DateChecker import registChecker
 from dingding.XiaoHei import xiaohei
 from data_util import today_is_trade_day
-from util.power import init_power_settings, turn_off_monitor
+from util.power import init_power_settings
 from util.log_util import setup_logging
 from jisilu.jisilu_data import Jisilu
 
@@ -73,10 +73,8 @@ def collect_turnover():
 # 初始化日志
 setup_logging()
 
-logger.info("开始初始化电源设置...")
 # 初始化电源设置
 init_power_settings()
-logger.info("电源设置初始化完成")
 
 # 初始化交易对象
 my = MyPos(xt_trader, acc, init_flag)
