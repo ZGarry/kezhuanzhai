@@ -30,7 +30,6 @@ def daily_task():
 
         # 交易完成后关闭显示器
         logger.info("交易完成，准备关闭显示器...")
-        turn_off_monitor()
         
     except Exception as e:
         logger.exception("执行每日任务失败")
