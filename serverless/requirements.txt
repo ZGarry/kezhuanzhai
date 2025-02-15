@@ -1,3 +1,0 @@
-#requirements.txt
-Flask==1.0.2
-werkzeug==0.16.0
