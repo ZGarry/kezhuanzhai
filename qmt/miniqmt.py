@@ -42,6 +42,7 @@ def buy_reverse_repo():
     # 买逆回购，剩下的资金买逆回购
     if init_flag:
         my.buy_ni_hui_gou()
+        pass
 
 def good_morning():
     # 个人股票展示
@@ -73,7 +74,7 @@ def collect_turnover():
 setup_logging()
 
 # 初始化电源设置
-init_power_settings()
+# init_power_settings()
 
 # 初始化交易对象
 my = MyPos(xt_trader, acc, init_flag)

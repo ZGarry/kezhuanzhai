@@ -32,7 +32,7 @@ def set_windows_power_settings():
         logger.info("电源设置已完成: 1分钟自动息屏,系统不休眠")
         
         # 调用 Windows API 函数来使屏幕关闭
-        ctypes.windll.user32.SendMessageW(0xFFFF, 0x0112, 0xF170, 2)
+        # ctypes.windll.user32.SendMessageW(0xFFFF, 0x0112, 0xF170, 2)
 
     except Exception as e:
         logger.exception("设置Windows电源选项失败")
